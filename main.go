@@ -6,4 +6,5 @@ import (
 
 func main() {
 	fmt.Println("program start today")
+	fmt.Println("yidane come here")
 }
