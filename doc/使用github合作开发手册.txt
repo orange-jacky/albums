@@ -1,0 +1,76 @@
+前提:
+	搭建好go开发环境,建议更新到go最新版本
+
+1.获取albums项目
+	打开终端
+
+	第一次下载
+	go get github.com/orange-jacky/albums
+
+	把服务器最新内容同步到自己机器上
+	go get -u github.com/orange-jacky/albums
+
+2.查看分支
+	打开终端进入$GOPATH/src/github.com/orange-jacky/albums
+
+	2.1本地分支
+		git branch -l 
+
+		*develop
+		master
+
+		星号表示当前使用分支
+	2.2服务器上分支
+		git branch -r
+
+		remotes/origin/HEAD -> origin/master
+  		remotes/origin/develop
+  		remotes/origin/master
+  		remotes/origin/test	
+
+3.在自己机器上开发
+	打开终端进入$GOPATH/src/github.com/orange-jacky/albums
+
+	3.1创建新分支mydev,并切换到mydev
+	git checkout -b mydev develop
+
+	3.2使用自己的机器上go IDE编写内容
+	比如在main.go的main函数里增加一行
+	fmt.Println("develop on mydev branch")
+
+	保存,提交到本地branch  mydev上
+	git add .
+	git commit -m "develop on mydev branch"
+
+	查看提交
+	git log
+
+4.合并本地内容
+	打开终端进入$GOPATH/src/github.com/orange-jacky/albums
+
+	4.1 切换到本地develop 分支
+	git checkout develop
+	git branch -l
+
+	4.2 从服务器上更新devlop分支(别人可能更新过服务器上develop分支内容)
+	git pull
+
+	4.3 合并mydev分支的内容到本地develop分支上
+	git merge mydev
+	查看合并 
+	git log
+	此时,mydev的commit内容已经 可以在develop看到
+
+5.上传本地内容到服务器
+	打开终端进入$GOPATH/src/github.com/orange-jacky/albums
+	5.1 切换到本地develop分支
+	git checkout develop
+	git branch -l
+
+	5.2 push内容
+	git push
+
+
+一套基本流程下来,保证各个开发者不冲突的合作开发一个项目
+
+	
