@@ -13,4 +13,6 @@ func main() {
 	fmt.Println("susecjh come here!!!")
 	fmt.Println("test merger")
 	fmt.Println("develop on mydev branch")
+	fmt.Println("sxfyyzandy add comments")
+	fmt.Println("Hi,happy to be here!!!")
 }
