@@ -17,4 +17,5 @@ func main() {
 	fmt.Println("Hi,happy to be here!!!")
 	fmt.Println("maliang come here")
 	fmt.Println("Bean come here")
+	fmt.Println("gch come here")
 }
