@@ -1,0 +1,26 @@
+1 默认安装golang
+
+2 安装homebrew
+	#终端输入命令安装
+	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+2 安装opencv
+	#添加science仓库
+	brew tap homebrew/science
+	#安装opencv
+	brew install opencv
+	#等待几分钟就可以安装成功
+
+3 安装go-opencv库
+	#终端输入命令安装
+	go get -u github.com/lazywei/go-opencv
+
+4 测试环境是否安装成功
+	#切换到例子目录
+	cd $GOPATH/src/github.com/lazywei/go-opencv/samples
+	#运行demo
+	go run hellocv.go
+
+5 常见问题
+	#pkg-config 依赖没安装
+	brew install pkg-config
