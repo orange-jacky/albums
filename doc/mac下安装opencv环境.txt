@@ -22,5 +22,24 @@
 	go run hellocv.go
 
 5 常见问题
-	#pkg-config 依赖没安装
-	brew install pkg-config
+	问题1:
+		#pkg-config 依赖没安装
+		brew install pkg-config
+
+	问题2:
+		go get github.com/lazywei/go-opencv
+		cd $GOPATH/src/github.com/lazywei/go-opencv/samples
+
+		macbookpro:samples fredlee$ go run hellocv.go 
+		# pkg-config --cflags opencv opencv opencv opencv opencv opencv opencv
+		dyld: Symbol not found: __cg_png_create_info_struct
+		  Referenced from: /System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO
+		  Expected in: /usr/local/lib/libPng.dylib
+		 in /System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO
+		pkg-config: signal: abort trap
+
+
+		解决办法:
+		cd /usr/local/lib
+		mv libpng.dylib libpng.dylib.backup
+		ln -s /System/Library/Frameworks/ImageIO.framework/Resources/libPng.dylib libPNG.dylib
