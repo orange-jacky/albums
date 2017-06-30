@@ -1,0 +1,10 @@
+<seelog type="adaptive" mininterval="1000" maxinterval="1000000" critmsgcount="100" minlevel="info">
+    <outputs formatid="all-access">
+        <filter levels="info">
+            <rollingfile type="date" filename="logs/access/access.log" datepattern="2006-01-02-15" fullname="false" maxrolls="720"/>
+        </filter>
+    </outputs>
+    <formats>
+        <format id="all-access" format="%Msg"/>
+    </formats>
+</seelog>

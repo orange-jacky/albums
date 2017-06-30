@@ -1,0 +1,19 @@
+<seelog type="adaptive" mininterval="1000" maxinterval="1000000" critmsgcount="100" minlevel="debug">
+    <outputs formatid="all">
+        <filter levels="debug">
+            <rollingfile type="date" filename="logs/debug/debug.log" datepattern="2006-01-02-15" fullname="false" maxrolls="240"/>
+        </filter>
+        <filter levels="info">
+            <rollingfile type="date" filename="logs/info/info.log" datepattern="2006-01-02-15" fullname="false" maxrolls="240"/>
+        </filter>
+        <filter levels="warn">
+            <rollingfile type="date" filename="logs/warn/warn.log" datepattern="2006-01-02-15" fullname="false" maxrolls="240"/>
+        </filter>
+        <filter levels="error">
+            <rollingfile type="date" filename="logs/error/error.log" datepattern="2006-01-02-15" fullname="false" maxrolls="240"/>
+        </filter>
+    </outputs>
+    <formats>
+        <format id="all" format="%Date %Time %Lev %File.%Line %Msg%n"/>
+    </formats>
+</seelog>

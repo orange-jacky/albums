@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configure>
+    <!--配置日志-->
+    <log>
+        <file>conf/log.xml</file>
+    </log>
+    <!--配置gin http服务信息-->
+    <gin>
+        <host>localhost</host>
+        <port>9990</port>
+    </gin>
+    <!--配置c++实施提取图片特征信息-->        
+    <feature>
+        <host>localhost</host>
+        <port>9991</port>
+    </feature>
+    <!--配置nginx信息,通过nginx-gridfs获取图片-->        
+    <nginx>
+        <host>localhost</host>
+        <port>9992</port>
+        <router>image</router>
+    </nginx>
+    <!--配置mongo信息-->        
+    <mongo>
+        <hosts>localhost:27017</hosts>
+        <!--配置图片库信息-->        
+        <image>
+            <db>image</db>
+        </image>
+        <!--配置图片特征库信息-->        
+        <feature>
+            <db>imagefeature</db>
+            <collection>imagefeature</collection>
+        </feature>
+    </mongo>
+</configure>

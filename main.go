@@ -2,20 +2,49 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/orange-jacky/albums/router"
+	"github.com/orange-jacky/albums/util"
+	"log"
+	"net/http"
+	"os"
+	"time"
 )
 
+func usage(programName string) {
+	fmt.Println(`
+usage: 
+	albums [configure file]
+
+eg: albums conf/conf.xml
+		`)
+}
+
 func main() {
-	fmt.Println("program start today")
-	fmt.Println("yidane come here")
-	fmt.Println("Frank-Ding:wq")
-	fmt.Println("jiangyd conne here")
-	fmt.Println("liupeng come here!!!")
-	fmt.Println("susecjh come here!!!")
-	fmt.Println("test merger")
-	fmt.Println("develop on mydev branch")
-	fmt.Println("sxfyyzandy add comments")
-	fmt.Println("Hi,happy to be here!!!")
-	fmt.Println("maliang come here")
-	fmt.Println("Bean come here")
-	fmt.Println("gch come here")
+	if len(os.Args) != 2 {
+		usage(os.Args[0])
+		os.Exit(-1)
+	}
+	//加载配置文件
+	configure := util.Configure(os.Args[1])
+	//启动日志单实例
+	mylog := util.Mylog(configure.Log.File)
+	defer mylog.Flush()
+
+	//设置gin模式
+	gin.SetMode(gin.ReleaseMode)
+	//配置路由
+	r := gin.Default()
+	r.POST("/upload", router.UpLoad)
+	r.POST("/download", router.DownLoad)
+	r.POST("/search", router.Search)
+	//起一个http服务器
+	server := fmt.Sprintf("%s:%s", configure.Gin.Host, configure.Gin.Port)
+	s := &http.Server{
+		Addr:         server,
+		Handler:      r,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+	}
+	log.Fatalln(s.ListenAndServe())
 }
