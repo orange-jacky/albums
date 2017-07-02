@@ -1,0 +1,187 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "/Q1wCGb9psDJcsJCZT/5h3Z/B40=",
+			"path": "github.com/cihub/seelog",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "nMOI1SR4bJ+Pz6d9bpkXxsD/buo=",
+			"path": "github.com/cihub/seelog/archive",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "oSd7EVei192qS3uYyCAMx9zV3Y8=",
+			"path": "github.com/cihub/seelog/archive/gzip",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "dtRA+XeH55DnnUnKRURBXGtEfws=",
+			"path": "github.com/cihub/seelog/archive/tar",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "y3/I46MDDS4wEKHlQjNyK0C1Jjc=",
+			"path": "github.com/cihub/seelog/archive/zip",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "QZRPtw16DtVTHEpaEopwXZAlMEI=",
+			"path": "github.com/cihub/seelog/io/iotest",
+			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
+			"revisionTime": "2017-01-30T13:45:32Z"
+		},
+		{
+			"checksumSHA1": "Cmfv2KnhEhnmmdn0gZDDTH3BZxM=",
+			"path": "github.com/gin-contrib/sse",
+			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",
+			"revisionTime": "2017-01-09T09:34:21Z"
+		},
+		{
+			"checksumSHA1": "S5HeEk3YdhbLfPO9BTWs6IcekDc=",
+			"path": "github.com/gin-gonic/gin",
+			"revision": "5ce686113b29d5b275bcf3a46d5896a26ec23595",
+			"revisionTime": "2017-07-02T10:46:36Z"
+		},
+		{
+			"checksumSHA1": "IntBu2LPik1IN06GkIxJ4ix1U1E=",
+			"path": "github.com/gin-gonic/gin/binding",
+			"revision": "5ce686113b29d5b275bcf3a46d5896a26ec23595",
+			"revisionTime": "2017-07-02T10:46:36Z"
+		},
+		{
+			"checksumSHA1": "v+H/cD17kjyZLCVSVc4hVle+Ydw=",
+			"path": "github.com/gin-gonic/gin/binding/example",
+			"revision": "5ce686113b29d5b275bcf3a46d5896a26ec23595",
+			"revisionTime": "2017-07-02T10:46:36Z"
+		},
+		{
+			"checksumSHA1": "QxWUkHbaP30pLXxXp6jTSzn1NpA=",
+			"path": "github.com/gin-gonic/gin/render",
+			"revision": "5ce686113b29d5b275bcf3a46d5896a26ec23595",
+			"revisionTime": "2017-07-02T10:46:36Z"
+		},
+		{
+			"checksumSHA1": "5SusLlYpervGPhrlkj+GmJrie6o=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "qyalT+838zrkZMjOA62VGus0VcI=",
+			"path": "github.com/golang/protobuf/proto/proto3_proto",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "ykKFnDOqloGM/pABMjTWkSrXmrw=",
+			"path": "github.com/golang/protobuf/proto/testdata",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "Z1gJ3PKzwBpOoPnTSEM5yd0zHYA=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "Y89zrH1jPTV2yIjp2JtYJ/v3e1s=",
+			"path": "github.com/golang/protobuf/ptypes",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "Z4RIWIXH05QItZqVbmbONO9mWig=",
+			"path": "github.com/golang/protobuf/ptypes/any",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "Lx2JRhnmO66Lhj6p7UXnsPb+IQs=",
+			"path": "github.com/golang/protobuf/ptypes/duration",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "+nsb2jDuP/5l2DO78dtU/jYB3G8=",
+			"path": "github.com/golang/protobuf/ptypes/timestamp",
+			"revision": "7b8002443fd4a3ce5f25ef93087c524546799a56",
+			"revisionTime": "2017-05-26T00:56:53Z"
+		},
+		{
+			"checksumSHA1": "cAY8WWlvwXakO9nUpQbqNW13JkI=",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "fc9e8d8ef48496124e79ae0df75490096eccf6fe",
+			"revisionTime": "2017-03-22T23:44:13Z"
+		},
+		{
+			"checksumSHA1": "TjT0gxkY8JQ7JLDlCb72vqcl/50=",
+			"path": "github.com/ugorji/go/codec",
+			"revision": "708a42d246822952f38190a8d8c4e6b16a0e600c",
+			"revisionTime": "2017-03-12T11:21:14Z"
+		},
+		{
+			"checksumSHA1": "ujkdYz/AOSZ4dVskaUGW9g/V/dM=",
+			"path": "golang.org/x/net/context",
+			"revision": "84f0e6f92b10139f986b1756e149a7d9de270cdc",
+			"revisionTime": "2017-05-12T21:27:43Z"
+		},
+		{
+			"checksumSHA1": "zrfqk6BDi9dSkVd1NUlrRyUXnwE=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "9ccfe848b9db8435a24c424abbc07a921adf1df5",
+			"revisionTime": "2017-04-27T03:54:25Z"
+		},
+		{
+			"checksumSHA1": "24wxwYO57BWvjPPSmCmWNFmmkv8=",
+			"path": "gopkg.in/go-playground/validator.v8",
+			"revision": "5f57d2222ad794d0dffb07e664ea05e2ee07d60c",
+			"revisionTime": "2016-07-18T13:41:25Z"
+		},
+		{
+			"checksumSHA1": "tefd2MHMp6qRXeE3jqzp3P40mNI=",
+			"path": "gopkg.in/mgo.v2",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "+mZKlPX9t4fHOQvkQeCnWw5JjkQ=",
+			"path": "gopkg.in/mgo.v2/bson",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "trGhCcEZSOZTwlLfWCRAoXXihW8=",
+			"path": "gopkg.in/mgo.v2/internal/json",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "LEvMCnprte47qdAxWvQ/zRxVF1U=",
+			"path": "gopkg.in/mgo.v2/internal/sasl",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "fOxeCpKRYNTTM2VCrsU2S/KEd1s=",
+			"path": "gopkg.in/mgo.v2/internal/scram",
+			"revision": "3f83fa5005286a7fe593b055f0d7771a7dce4655",
+			"revisionTime": "2016-08-18T02:01:20Z"
+		},
+		{
+			"checksumSHA1": "QX69hdf0wsAInBxC21QNkmXXD4o=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b",
+			"revisionTime": "2017-04-07T17:21:22Z"
+		}
+	],
+	"rootPath": "github.com/orange-jacky/albums"
+}
