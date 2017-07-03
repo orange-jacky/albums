@@ -1,0 +1,19 @@
+1. 下载,编译
+	go get github.com/orange-jacky/albums
+2.运行
+	cd $GOPATH/src/github.com/orange-jacky/albums
+	albums conf/conf.xml
+
+	其中conf.xml是配置文件
+
+3.测试
+	先起一个mongo,ip和端口在conf.xml配置
+
+	新打开一个终端
+	cd $GOPATH/src/github.com/orange-jacky/albums/testdata
+
+	测试上传
+	curl -F "images=@./100000.png" localhost:9990/upload
+
+	测试下载
+	curl -XPOST localhost:9990/download
