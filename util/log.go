@@ -29,11 +29,11 @@ func Mylog(file string) *mylog {
 
 // LoadConfigure 从file里读取seelog 配置
 func (l *mylog) LoadConfigure(file string) error {
-	log, err := seelog.LoggerFromConfigAsFile(file)
+	logger, err := seelog.LoggerFromConfigAsFile(file)
 	if err != nil {
 		return err
 	}
-	l.Log = log
+	l.Log = logger
 
 	return nil
 }
@@ -56,6 +56,22 @@ func (l *mylog) Warnf(format string, v ...interface{}) {
 // Errorf 输出error信息
 func (l *mylog) Errorf(format string, v ...interface{}) {
 	l.Log.Errorf(format, v)
+}
+
+func (l *mylog) Info(v ...interface{}){
+	l.Log.Info(v)
+}
+
+func (l *mylog) Debug(v ...interface{}){
+	l.Log.Debug(v)
+}
+
+func (l *mylog) Warn(v ...interface{}){
+	l.Log.Warn(v)
+}
+
+func (l *mylog) Error(v ...interface{}){
+	l.Log.Error(v)
 }
 
 // Infof 输出info信息
