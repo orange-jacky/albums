@@ -24,8 +24,8 @@ func UpLoad(c *gin.Context) {
 	gridfs.Connect(conf.Mongo.Hosts, conf.Mongo.Image.Db)
 	gridfs.OpenDb(conf.Mongo.Image.Db)
 	gridfs.OpenTable("fs")
-
 	defer gridfs.Close()
+
 	//先缓存文件
 	images, _ := cacheFile(c)
 	defer clearCache(c)

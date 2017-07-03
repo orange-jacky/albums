@@ -11,8 +11,7 @@ import (
 
 type MongoGridfs struct {
 	Mongo
-	GridFS  *mgo.GridFS
-	Results Images
+	GridFS *mgo.GridFS
 }
 
 func NewMongoGridfs() *MongoGridfs {
@@ -24,17 +23,19 @@ func (m *MongoGridfs) OpenTable(table string) error {
 	return nil
 }
 
-func (m *MongoGridfs) Query(query interface{}) error {
-	record := new(Imagedata)
+func (m *MongoGridfs) Query(query interface{}) (images []map[string]interface{}, err error) {
+	record := make(map[string]interface{})
 	iter := m.GridFS.Find(query).Iter()
-	for iter.Next(record) {
-		m.Results = append(m.Results, record)
-		*record = Imagedata{} //重置变量
+	for iter.Next(&record) {
+		//for debug
+		//fmt.Println("record", record)
+		images = append(images, record)
+		record = make(map[string]interface{})
 	}
-	if err := iter.Close(); err != nil {
-		return err
+	if err = iter.Close(); err != nil {
+		return images, err
 	}
-	return nil
+	return images, nil
 }
 
 func (m *MongoGridfs) Insert(docs ...interface{}) error {
