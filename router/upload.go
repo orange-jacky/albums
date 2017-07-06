@@ -34,7 +34,10 @@ func UpLoad(c *gin.Context) {
 	//入库
 	gridfs.Insert(images)
 
-	c.String(http.StatusOK, "%s", "upload")
+	resp := data.Response{}
+	resp.Data = images
+	c.JSON(http.StatusOK, resp)
+	//c.String(http.StatusOK, "%s", "upload")
 }
 
 func getUser(c *gin.Context) string {
