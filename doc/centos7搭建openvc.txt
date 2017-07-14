@@ -1,0 +1,112 @@
+安装mongo3.0  参考：http://www.centoscn.com/CentosServer/sql/Mariadb/2015/0503/5342.html
+	vi /etc/yum.repos.d/mongodb-org-3.0.repo
+		写入
+			[mongodb-org-3.0]
+			name=MongoDB Repository
+			baseurl=http://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.0/x86_64/
+			gpgcheck=0
+			enabled=1
+		保存
+	执行 yum install -y mongodb-org
+	
+		配置文件在：/etc/mongod.conf  数据文件在：/var/lib/mongo  日志文件在：/var/log/mongodb  mongodb服务使用
+		#启动
+		service mongod start
+		#停止
+		service mongod stop
+		#重启
+		service mongod restart
+		#增加开机启动
+		chkconfig mongod on
+
+
+
+CentOS 7搭建OpenCV 2.4.13  参考:http://blog.csdn.net/shine_journey/article/details/69544219
+环境搭建：
+1、 系统 CentOS 7 64位
+2、 GCC：    gcc version 4.8.5 (GCC) 及以上均可
+3、 cmake：  cmake version 2.8.12.2 及以上均可
+4、 Python：  python 2.6.6 及以上均可
+请继续进行以下安装：
+
+    # yum install python-devel
+
+    # yum install libjpeg libjpeg-devel zlib zlib-devel freetype freetype-devel lcms lcms-devel
+
+    # yum install python-imaging   
+
+5. Numpy  ：numpy-1.9.0 
+
+    # wget http://jaist.dl.sourceforge.NET/project/numpy/NumPy/1.9.0/numpy-1.9.0.zip
+    # unzip numpy-1.9.0.zip
+    # cd numpy-1.9.0
+    # python setup.py install
+    # reboot
+
+6. 安装依赖库：
+
+# yum install gtk+-devel gimp-devel gimp-devel-tools gimp-help-browser zlib-devel libtiff-devel libjpeg-devel libpng-devel gstreamer-devel libavc1394-devel libraw1394-devel libdc1394-devel jasper-devel jasper-utils swig python libtool nasm
+
+# yum install gtk*
+
+7. 安装yasm
+
+# wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+
+# tar zxvf yasm-1.3.0.tar.gz
+# cd yasm-1.3.0
+# ./configure
+# make && make install
+
+
+8. 安装ffmpeg，建议不要指定--prefix，采用默认安装路径即可
+# 从ffmpeg官网：https://www.ffmpeg.org/download.html下载源代码
+
+#  tar -jxvf ffmpeg-3.2.4.tar.bz2
+
+# ./configure --enable-shared --enable-gpl --enable-swscale
+
+其中--enable-shared表示生成动态链接库，可以供以后编程使用，同时生成的可执行程序也依赖这些动态库。如果不加上--enable-shared选项则使用静态链接的方式编译，此时不会生成动态库，同时生成的ffmpeg等的可执行文件体积也比较大，但他们不需要动态库就可以直接运行.
+
+# make   (大约15分钟)
+
+# make install
+
+9安装OpenCV 2.4.13.2
+
+从官网下载 OpenCV-2.4.13.zip
+执行安装
+
+# unzip opencv-2.4.13.zip
+# cd opencv-2.4.13
+# cmake CMakeLists.txt
+
+# make && make install 
+
+测试：
+1. # vim /etc/ld.so.conf.d/opencv.conf 
+     创建并编辑该文件。填入：/usr/local/lib
+2. # ldconfig
+3. # vim /etc/bashrc              在文件末尾，填写以下2行：
+	PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+	export PKG_CONFIG_PATH 
+4. # source /etc/bashrc              使文件生效
+5. 进入opencv-2.4.13下的 samples / c 目录
+   运行脚本$./build_all.sh
+   等待其编译完后，执行目录下的其中一个程序 $./find_obj 。可以看到结果
+
+   
+   
+中间遇到问题：
+/usr/include/jasper/jas_math.h:143:15:?错误：‘SIZE_MAX’在此作用域中尚未声明
+【错误原因】：
+2017年5月15日，centos更新了jaspe-devel包为jasper-devel.x86_64?0:1.900.1-30.el7_3（旧版本为jasper-devel-1.900.1-29.el7.x86_64）,这将导致该问题。
+【解决方案】：
+vi?/usr/include/jasper/jas_math.h
+#在?#include?<stdint.h>?后添加
+#if?!?defined?SIZE_MAX
+#define?SIZE_MAX?(4294967295U)
+#endif
+
+
+	
