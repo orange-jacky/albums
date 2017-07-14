@@ -17,3 +17,12 @@
 
 	测试下载
 	curl -XPOST localhost:9990/download
+
+
+4.压力测试
+ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/download"
+
+其中 n 表示并发数量
+p 保存需要post的参数
+T 说明post参数类型,如果指定p,必须指定T
+s 超时时间,单位秒
