@@ -1,33 +1,33 @@
-°²×°mongo3.0  ²Î¿¼£ºhttp://www.centoscn.com/CentosServer/sql/Mariadb/2015/0503/5342.html
+å®‰è£…mongo3.0  å‚è€ƒï¼šhttp://www.centoscn.com/CentosServer/sql/Mariadb/2015/0503/5342.html
 	vi /etc/yum.repos.d/mongodb-org-3.0.repo
-		Ğ´Èë
+		å†™å…¥
 			[mongodb-org-3.0]
 			name=MongoDB Repository
 			baseurl=http://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.0/x86_64/
 			gpgcheck=0
 			enabled=1
-		±£´æ
-	Ö´ĞĞ yum install -y mongodb-org
+		ä¿å­˜
+	æ‰§è¡Œ yum install -y mongodb-org
 	
-		ÅäÖÃÎÄ¼şÔÚ£º/etc/mongod.conf  Êı¾İÎÄ¼şÔÚ£º/var/lib/mongo  ÈÕÖ¾ÎÄ¼şÔÚ£º/var/log/mongodb  mongodb·şÎñÊ¹ÓÃ
-		#Æô¶¯
+		é…ç½®æ–‡ä»¶åœ¨ï¼š/etc/mongod.conf  æ•°æ®æ–‡ä»¶åœ¨ï¼š/var/lib/mongo  æ—¥å¿—æ–‡ä»¶åœ¨ï¼š/var/log/mongodb  mongodbæœåŠ¡ä½¿ç”¨
+		#å¯åŠ¨
 		service mongod start
-		#Í£Ö¹
+		#åœæ­¢
 		service mongod stop
-		#ÖØÆô
+		#é‡å¯
 		service mongod restart
-		#Ôö¼Ó¿ª»úÆô¶¯
+		#å¢åŠ å¼€æœºå¯åŠ¨
 		chkconfig mongod on
 
 
 
-CentOS 7´î½¨OpenCV 2.4.13  ²Î¿¼:http://blog.csdn.net/shine_journey/article/details/69544219
-»·¾³´î½¨£º
-1¡¢ ÏµÍ³ CentOS 7 64Î»
-2¡¢ GCC£º    gcc version 4.8.5 (GCC) ¼°ÒÔÉÏ¾ù¿É
-3¡¢ cmake£º  cmake version 2.8.12.2 ¼°ÒÔÉÏ¾ù¿É
-4¡¢ Python£º  python 2.6.6 ¼°ÒÔÉÏ¾ù¿É
-Çë¼ÌĞø½øĞĞÒÔÏÂ°²×°£º
+CentOS 7æ­å»ºOpenCV 2.4.13  å‚è€ƒ:http://blog.csdn.net/shine_journey/article/details/69544219
+ç¯å¢ƒæ­å»ºï¼š
+1ã€ ç³»ç»Ÿ CentOS 7 64ä½
+2ã€ GCCï¼š    gcc version 4.8.5 (GCC) åŠä»¥ä¸Šå‡å¯
+3ã€ cmakeï¼š  cmake version 2.8.12.2 åŠä»¥ä¸Šå‡å¯
+4ã€ Pythonï¼š  python 2.6.6 åŠä»¥ä¸Šå‡å¯
+è¯·ç»§ç»­è¿›è¡Œä»¥ä¸‹å®‰è£…ï¼š
 
     # yum install python-devel
 
@@ -35,7 +35,7 @@ CentOS 7´î½¨OpenCV 2.4.13  ²Î¿¼:http://blog.csdn.net/shine_journey/article/detai
 
     # yum install python-imaging   
 
-5. Numpy  £ºnumpy-1.9.0 
+5. Numpy  ï¼šnumpy-1.9.0 
 
     # wget http://jaist.dl.sourceforge.NET/project/numpy/NumPy/1.9.0/numpy-1.9.0.zip
     # unzip numpy-1.9.0.zip
@@ -43,13 +43,13 @@ CentOS 7´î½¨OpenCV 2.4.13  ²Î¿¼:http://blog.csdn.net/shine_journey/article/detai
     # python setup.py install
     # reboot
 
-6. °²×°ÒÀÀµ¿â£º
+6. å®‰è£…ä¾èµ–åº“ï¼š
 
 # yum install gtk+-devel gimp-devel gimp-devel-tools gimp-help-browser zlib-devel libtiff-devel libjpeg-devel libpng-devel gstreamer-devel libavc1394-devel libraw1394-devel libdc1394-devel jasper-devel jasper-utils swig python libtool nasm
 
 # yum install gtk*
 
-7. °²×°yasm
+7. å®‰è£…yasm
 
 # wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
 
@@ -59,23 +59,23 @@ CentOS 7´î½¨OpenCV 2.4.13  ²Î¿¼:http://blog.csdn.net/shine_journey/article/detai
 # make && make install
 
 
-8. °²×°ffmpeg£¬½¨Òé²»ÒªÖ¸¶¨--prefix£¬²ÉÓÃÄ¬ÈÏ°²×°Â·¾¶¼´¿É
-# ´Óffmpeg¹ÙÍø£ºhttps://www.ffmpeg.org/download.htmlÏÂÔØÔ´´úÂë
+8. å®‰è£…ffmpegï¼Œå»ºè®®ä¸è¦æŒ‡å®š--prefixï¼Œé‡‡ç”¨é»˜è®¤å®‰è£…è·¯å¾„å³å¯
+# ä»ffmpegå®˜ç½‘ï¼šhttps://www.ffmpeg.org/download.htmlä¸‹è½½æºä»£ç 
 
 #  tar -jxvf ffmpeg-3.2.4.tar.bz2
 
 # ./configure --enable-shared --enable-gpl --enable-swscale
 
-ÆäÖĞ--enable-shared±íÊ¾Éú³É¶¯Ì¬Á´½Ó¿â£¬¿ÉÒÔ¹©ÒÔºó±à³ÌÊ¹ÓÃ£¬Í¬Ê±Éú³ÉµÄ¿ÉÖ´ĞĞ³ÌĞòÒ²ÒÀÀµÕâĞ©¶¯Ì¬¿â¡£Èç¹û²»¼ÓÉÏ--enable-sharedÑ¡ÏîÔòÊ¹ÓÃ¾²Ì¬Á´½ÓµÄ·½Ê½±àÒë£¬´ËÊ±²»»áÉú³É¶¯Ì¬¿â£¬Í¬Ê±Éú³ÉµÄffmpegµÈµÄ¿ÉÖ´ĞĞÎÄ¼şÌå»ıÒ²±È½Ï´ó£¬µ«ËûÃÇ²»ĞèÒª¶¯Ì¬¿â¾Í¿ÉÒÔÖ±½ÓÔËĞĞ.
+å…¶ä¸­--enable-sharedè¡¨ç¤ºç”ŸæˆåŠ¨æ€é“¾æ¥åº“ï¼Œå¯ä»¥ä¾›ä»¥åç¼–ç¨‹ä½¿ç”¨ï¼ŒåŒæ—¶ç”Ÿæˆçš„å¯æ‰§è¡Œç¨‹åºä¹Ÿä¾èµ–è¿™äº›åŠ¨æ€åº“ã€‚å¦‚æœä¸åŠ ä¸Š--enable-sharedé€‰é¡¹åˆ™ä½¿ç”¨é™æ€é“¾æ¥çš„æ–¹å¼ç¼–è¯‘ï¼Œæ­¤æ—¶ä¸ä¼šç”ŸæˆåŠ¨æ€åº“ï¼ŒåŒæ—¶ç”Ÿæˆçš„ffmpegç­‰çš„å¯æ‰§è¡Œæ–‡ä»¶ä½“ç§¯ä¹Ÿæ¯”è¾ƒå¤§ï¼Œä½†ä»–ä»¬ä¸éœ€è¦åŠ¨æ€åº“å°±å¯ä»¥ç›´æ¥è¿è¡Œ.
 
-# make   (´óÔ¼15·ÖÖÓ)
+# make   (å¤§çº¦15åˆ†é’Ÿ)
 
 # make install
 
-9°²×°OpenCV 2.4.13.2
+9å®‰è£…OpenCV 2.4.13.2
 
-´Ó¹ÙÍøÏÂÔØ OpenCV-2.4.13.zip
-Ö´ĞĞ°²×°
+ä»å®˜ç½‘ä¸‹è½½ OpenCV-2.4.13.zip
+æ‰§è¡Œå®‰è£…
 
 # unzip opencv-2.4.13.zip
 # cd opencv-2.4.13
@@ -83,27 +83,27 @@ CentOS 7´î½¨OpenCV 2.4.13  ²Î¿¼:http://blog.csdn.net/shine_journey/article/detai
 
 # make && make install 
 
-²âÊÔ£º
+æµ‹è¯•ï¼š
 1. # vim /etc/ld.so.conf.d/opencv.conf 
-     ´´½¨²¢±à¼­¸ÃÎÄ¼ş¡£ÌîÈë£º/usr/local/lib
+     åˆ›å»ºå¹¶ç¼–è¾‘è¯¥æ–‡ä»¶ã€‚å¡«å…¥ï¼š/usr/local/lib
 2. # ldconfig
-3. # vim /etc/bashrc              ÔÚÎÄ¼şÄ©Î²£¬ÌîĞ´ÒÔÏÂ2ĞĞ£º
+3. # vim /etc/bashrc              åœ¨æ–‡ä»¶æœ«å°¾ï¼Œå¡«å†™ä»¥ä¸‹2è¡Œï¼š
 	PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 	export PKG_CONFIG_PATH 
-4. # source /etc/bashrc              Ê¹ÎÄ¼şÉúĞ§
-5. ½øÈëopencv-2.4.13ÏÂµÄ samples / c Ä¿Â¼
-   ÔËĞĞ½Å±¾$./build_all.sh
-   µÈ´ıÆä±àÒëÍêºó£¬Ö´ĞĞÄ¿Â¼ÏÂµÄÆäÖĞÒ»¸ö³ÌĞò $./find_obj ¡£¿ÉÒÔ¿´µ½½á¹û
+4. # source /etc/bashrc              ä½¿æ–‡ä»¶ç”Ÿæ•ˆ
+5. è¿›å…¥opencv-2.4.13ä¸‹çš„ samples / c ç›®å½•
+   è¿è¡Œè„šæœ¬$./build_all.sh
+   ç­‰å¾…å…¶ç¼–è¯‘å®Œåï¼Œæ‰§è¡Œç›®å½•ä¸‹çš„å…¶ä¸­ä¸€ä¸ªç¨‹åº $./find_obj ã€‚å¯ä»¥çœ‹åˆ°ç»“æœ
 
    
    
-ÖĞ¼äÓöµ½ÎÊÌâ£º
-/usr/include/jasper/jas_math.h:143:15:?´íÎó£º¡®SIZE_MAX¡¯ÔÚ´Ë×÷ÓÃÓòÖĞÉĞÎ´ÉùÃ÷
-¡¾´íÎóÔ­Òò¡¿£º
-2017Äê5ÔÂ15ÈÕ£¬centos¸üĞÂÁËjaspe-devel°üÎªjasper-devel.x86_64?0:1.900.1-30.el7_3£¨¾É°æ±¾Îªjasper-devel-1.900.1-29.el7.x86_64£©,Õâ½«µ¼ÖÂ¸ÃÎÊÌâ¡£
-¡¾½â¾ö·½°¸¡¿£º
+ä¸­é—´é‡åˆ°é—®é¢˜ï¼š
+/usr/include/jasper/jas_math.h:143:15:?é”™è¯¯ï¼šâ€˜SIZE_MAXâ€™åœ¨æ­¤ä½œç”¨åŸŸä¸­å°šæœªå£°æ˜
+ã€é”™è¯¯åŸå› ã€‘ï¼š
+2017å¹´5æœˆ15æ—¥ï¼Œcentosæ›´æ–°äº†jaspe-develåŒ…ä¸ºjasper-devel.x86_64?0:1.900.1-30.el7_3ï¼ˆæ—§ç‰ˆæœ¬ä¸ºjasper-devel-1.900.1-29.el7.x86_64ï¼‰,è¿™å°†å¯¼è‡´è¯¥é—®é¢˜ã€‚
+ã€è§£å†³æ–¹æ¡ˆã€‘ï¼š
 vi?/usr/include/jasper/jas_math.h
-#ÔÚ?#include?<stdint.h>?ºóÌí¼Ó
+#åœ¨?#include?<stdint.h>?åæ·»åŠ 
 #if?!?defined?SIZE_MAX
 #define?SIZE_MAX?(4294967295U)
 #endif
