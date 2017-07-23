@@ -1,0 +1,44 @@
+参与人员:
+	北京-gch
+	成都-小企鹅
+	北京-大嘴的猴
+
+讨论问题:
+	1.提取图片特征
+		北京-gch 已成功跑起一个demo,使用SURF算法, 继续研究histogram 算法,并提取特征,另外研究这两种算法是否可以使用卡方检验做相似度计算
+	2.用户权限管理
+		成都-小企鹅 使用gin的jwt做用户权限管理
+	3.操作页面
+		武汉-都祥斌-php 负责做上传,下载,搜索3个页面
+	4.go 操作opencv c++ api
+		北京-大嘴的猴 已经做了一些封装,后面用到什么,再继续封装
+		https://github.com/orange-jacky/open_cv
+
+go操作opencv c++ api 的其中一个样例
+
+package main
+
+import (
+	"fmt"
+	. "github.com/orange-jacky/open_cv/core"
+	. "github.com/orange-jacky/open_cv/gui"
+)
+
+func main() {
+	Exam1()
+}
+
+//例子url:
+//http://docs.opencv.org/2.4.13.2/modules/core/doc/basic_structures.html#vec
+func Exam1() {
+	mat := NewMatRowsColsType(200, 200, CV_8UC3, NewScalar1(0))
+	fmt.Println(mat.String())
+	//1
+	Rectangle(mat, NewPoint(100, 100), NewPoint(50, 50), NewScalar3(255, 0, 0))
+	//2
+	rRect := NewRotatedRectCenterSize(NewPoint2f(100, 100), NewSize2f(100, 50), 30)
+	brect := rRect.BoundingRect()
+	RectangleWithRect(mat, brect, NewScalar3(0, 255, 0))
+	Imshow("test", NewInputArrayWithMat(mat))
+	Waitkey(0)
+}
