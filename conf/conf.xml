@@ -12,7 +12,7 @@
     <!--配置c++实施提取图片特征信息-->        
     <feature>
         <host>localhost</host>
-        <port>9991</port>
+        <port>9090</port>
     </feature>
     <!--配置nginx信息,通过nginx-gridfs获取图片-->        
     <nginx>

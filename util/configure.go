@@ -21,7 +21,7 @@ type Gin struct {
 }
 
 // Feature 实时提取特征向量配置
-type Feature struct {
+type MyFeature struct {
 	Host string `xml:"host"`
 	Port string `xml:"port"`
 }
@@ -48,12 +48,12 @@ type Mongo struct {
 }
 
 type configure struct {
-	XMLName xml.Name `xml:"configure"`
-	Log     Log      `xml:"log"`
-	Gin     Gin      `xml:"gin"`
-	Feature Feature  `xml:"feature"`
-	Nginx   Nginx    `xml:"nginx"`
-	Mongo   Mongo    `xml:"mongo"`
+	XMLName xml.Name  `xml:"configure"`
+	Log     Log       `xml:"log"`
+	Gin     Gin       `xml:"gin"`
+	Feature MyFeature `xml:"feature"`
+	Nginx   Nginx     `xml:"nginx"`
+	Mongo   Mongo     `xml:"mongo"`
 }
 
 var (
