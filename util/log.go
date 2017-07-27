@@ -58,19 +58,19 @@ func (l *mylog) Errorf(format string, v ...interface{}) {
 	l.Log.Errorf(format, v)
 }
 
-func (l *mylog) Info(v ...interface{}){
+func (l *mylog) Info(v ...interface{}) {
 	l.Log.Info(v)
 }
 
-func (l *mylog) Debug(v ...interface{}){
+func (l *mylog) Debug(v ...interface{}) {
 	l.Log.Debug(v)
 }
 
-func (l *mylog) Warn(v ...interface{}){
+func (l *mylog) Warn(v ...interface{}) {
 	l.Log.Warn(v)
 }
 
-func (l *mylog) Error(v ...interface{}){
+func (l *mylog) Error(v ...interface{}) {
 	l.Log.Error(v)
 }
 

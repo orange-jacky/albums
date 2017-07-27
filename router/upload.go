@@ -59,7 +59,7 @@ func getAlbum(c *gin.Context) string {
 func clearCache(c *gin.Context) {
 	user := getUser(c)
 	album := getAlbum(c)
-	os.RemoveAll(fmt.Sprintf("%s%s%s", user, util.DirSeg(), album))
+	os.RemoveAll(util.GetDir(user, album))
 }
 
 // cacheFile 先把上传文件缓存到本地磁盘
@@ -83,7 +83,7 @@ func cacheFile(c *gin.Context) (images data.Images, err error) {
 	//创建临时缓存目录
 	user := getUser(c)
 	album := getAlbum(c)
-	dir := fmt.Sprintf("%s%s%s", user, util.DirSeg(), album)
+	dir := util.GetDir(user, album)
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
 		return images, err
@@ -110,7 +110,8 @@ func cacheFile(c *gin.Context) (images data.Images, err error) {
 func getImageInfo(c *gin.Context, images *data.Images) {
 	user := getUser(c)
 	album := getAlbum(c)
-	dir := fmt.Sprintf("%s%s%s", user, util.DirSeg(), album)
+	dir := util.GetDir(user, album)
+
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		//跳过目录
 		if info.IsDir() {

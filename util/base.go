@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"runtime"
 )
 
@@ -16,4 +17,8 @@ func DirSeg() string {
 		s = "/"
 	}
 	return s
+}
+
+func GetDir(user, album string) string {
+	return fmt.Sprintf("filecache%s%s%s%s", DirSeg(), user, DirSeg(), album)
 }
