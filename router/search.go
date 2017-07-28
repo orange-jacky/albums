@@ -3,9 +3,15 @@ package router
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/data"
+	. "github.com/orange-jacky/albums/db"
 	. "github.com/orange-jacky/albums/feature"
 	. "github.com/orange-jacky/albums/util"
+	"gopkg.in/mgo.v2/bson"
+	"io/ioutil"
+	"math"
 	"net/http"
+	"sort"
 )
 
 // Search 以图搜图
@@ -13,6 +19,124 @@ func Search(c *gin.Context) {
 	//host
 	conf := Configure("")
 	hostport := fmt.Sprintf("%s:%s", conf.Feature.Host, conf.Feature.Port)
-	fmt.Println(GetImgFeature([]byte("lxm"), hostport))
-	c.String(http.StatusOK, "%s", "search")
+
+	//获取图片内容
+	image, err := getsSearchFile(c)
+	//提取特征
+	var feature_vector []float64
+	feature_vector, err = GetImgFeature(image, hostport)
+	fmt.Println("get feature:", feature_vector, err)
+
+	//查特征库,找到对比数据
+	features, err := queryFeature(c)
+	fmt.Println("query collection:", features, err)
+
+	//做卡方相似计算
+	ret := histogram(feature_vector, features)
+	fmt.Println("ret:", ret)
+
+	resp := Response{}
+	resp.Data = ret
+	c.JSON(http.StatusOK, resp)
+	//c.String(http.StatusOK, "search")
+}
+
+// getsSearchFile 获取搜索图片内容
+func getsSearchFile(c *gin.Context) (image []byte, err error) {
+	r := c.Request
+	//POST takes the uploaded file(s) and saves it to disk.
+	//parse the multipart form in the request
+	err = r.ParseMultipartForm(100000)
+	if err != nil {
+		return image, err
+	}
+	//get a ref to the parsed multipart form
+	m := r.MultipartForm
+	//get the *fileheaders
+	files := m.File["image"] //表单的name,id
+
+	//post 没有文件直接返回
+	if len(files) == 0 {
+		return image, nil
+	}
+
+	//取第一张图片内容
+	//for each fileheader, get a handle to the actual file
+	src, err := files[0].Open()
+	if err != nil {
+		return image, err
+	}
+	defer src.Close()
+
+	return ioutil.ReadAll(src)
+}
+
+//从特征表查特征
+func queryFeature(c *gin.Context) (features Features, err error) {
+	conf := Configure("")
+	//新建一个连接
+	mongo := NewMongo()
+	mongo.Connect(conf.Mongo.Hosts, conf.Mongo.Feature.Db)
+	mongo.OpenDb(conf.Mongo.Feature.Db)
+	mongo.OpenTable(conf.Mongo.Feature.Collection)
+	defer mongo.Close()
+
+	//查数据库
+	user := getUser(c)
+	album := getAlbum(c)
+	query := bson.M{"user": user, "album": album}
+	return mongo.Query(query)
+}
+
+func histogram(search_vector []float64, features Features) (ret Features) {
+	type A struct {
+		distance float64
+		feature  *Featuredata
+	}
+	var sli []A
+	for _, feature := range features {
+		d := chi2_distance(search_vector, feature.Features)
+		a := A{d, feature}
+		sli = append(sli, a)
+	}
+	sort.Slice(sli, func(i, j int) bool { return sli[i].distance < sli[j].distance })
+
+	//只返回5张相似度最高的
+	for i, a := range sli {
+		if i == 5 {
+			break
+		}
+		ret = append(ret, a.feature)
+	}
+	return ret
+}
+
+// chi-square  卡方检验
+func chi2_distance(a, b []float64) (d float64) {
+	//fmt.Println("a:", a)
+	//fmt.Println("b:", b)
+	c := zip(a, b)
+	//fmt.Println("c:", c)
+	for _, ab := range c {
+		a, b := ab[0], ab[1]
+		//	fmt.Println("a=", a, "b=", b)
+		v := math.Pow(a-b, 2) / (a + b + 1e-10)
+		//	fmt.Println("v=", v)
+		d += v
+	}
+	d *= 0.5
+	return d
+}
+
+func zip(a, b []float64) (c [][]float64) {
+	len_a := len(a)
+	len_b := len(b)
+	min := int(math.Min(float64(len_a), float64(len_b)))
+	for i := 0; i < min; i++ {
+		sli := make([]float64, 0)
+		sli = append(sli, a[i], b[i])
+		//fmt.Printf("a[%d]=%v, b[%d]=%v, sli=%v\n", i, a[i], i, b[i], sli)
+		c = append(c, sli)
+	}
+	return c
 }

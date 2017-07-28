@@ -25,11 +25,9 @@ func GetImgFeature(image []byte, hostport string) (features []float64, err error
 	if err := trans.Open(); err != nil {
 		return features, fmt.Errorf("Error opening socket to %s, %v ", hostport, err)
 	}
-	fmt.Println("len of image is", len(image))
 	features, err = client.Feature(image)
 	if err != nil {
 		return features, fmt.Errorf("Error client.Feature(image) %v", err)
 	}
-	fmt.Println("feature vector of image is", features)
 	return features, nil
 }

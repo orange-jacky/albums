@@ -15,7 +15,6 @@ type Mongo struct {
 	S          *mgo.Session
 	Db         *mgo.Database
 	C          *mgo.Collection
-	Results    Features
 }
 
 func NewMongo() *Mongo {
@@ -49,21 +48,21 @@ func (m *Mongo) OpenTable(table string) error {
 	return nil
 }
 
-func (m *Mongo) Query(query interface{}) error {
+func (m *Mongo) Query(query interface{}) (features Features, err error) {
 	record := new(Featuredata)
 	iter := m.C.Find(query).Iter()
 	for iter.Next(record) {
-		m.Results = append(m.Results, record)
-		*record = Featuredata{} //重置变量
+		features = append(features, record)
+		record = new(Featuredata) //重置变量
 	}
 	if err := iter.Close(); err != nil {
-		return err
+		return features, err
 	}
-	return nil
+	return features, nil
 }
 
 func (m *Mongo) Insert(docs ...interface{}) error {
-	return m.C.Insert(docs)
+	return m.C.Insert(docs...)
 }
 
 func (m *Mongo) Close() error {

@@ -4,10 +4,13 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common/jobqueue"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/db"
+	. "github.com/orange-jacky/albums/feature"
 	"github.com/orange-jacky/albums/util"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -28,38 +31,18 @@ func UpLoad(c *gin.Context) {
 
 	//先缓存文件
 	images, _ := cacheFile(c)
-	defer clearCache(c)
 	//提取图片信息
 	getImageInfo(c, &images)
 	//入库
 	gridfs.Insert(images)
 
+	//发送给提取特征和入库服务
+	send2GetFeature(getUser(c), getAlbum(c), images)
+
 	resp := data.Response{}
 	resp.Data = images
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "upload")
-}
-
-func getUser(c *gin.Context) string {
-	user := c.PostForm("user")
-	if user == "" {
-		user = "default"
-	}
-	return user
-}
-
-func getAlbum(c *gin.Context) string {
-	album := c.PostForm("album")
-	if album == "" {
-		album = "default"
-	}
-	return album
-}
-
-func clearCache(c *gin.Context) {
-	user := getUser(c)
-	album := getAlbum(c)
-	os.RemoveAll(util.GetDir(user, album))
 }
 
 // cacheFile 先把上传文件缓存到本地磁盘
@@ -133,4 +116,65 @@ func getImageInfo(c *gin.Context, images *data.Images) {
 		*images = append(*images, img)
 		return nil
 	})
+}
+
+func clearCache(dir string) {
+	os.RemoveAll(dir)
+}
+
+//发送给提取特征和入库服务
+type A struct {
+	dir    string
+	images data.Images
+}
+
+func send2GetFeature(user, album string, images data.Images) {
+	dir := util.GetDir(user, album)
+
+	a := A{dir, images}
+	var feature []float64
+
+	jobqueue := util.JobQueue()
+	job := Job{Input: a, Output: feature, Handler: getImgFeature}
+	jobqueue.Push(job)
+}
+
+func getImgFeature(input, output interface{}) {
+	if a, ok := input.(A); ok {
+		dir := a.dir
+		defer clearCache(dir)
+
+		var features data.Features
+		//host
+		conf := util.Configure("")
+		hostport := fmt.Sprintf("%s:%s", conf.Feature.Host, conf.Feature.Port)
+
+		//提取所有上传文件特征
+		for _, image := range a.images {
+			filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Metadata.Name)
+			sli_b, err := ioutil.ReadFile(filename)
+			if err != nil {
+				continue
+			}
+			//提取特征
+			var feature_vector []float64
+			feature_vector, err = GetImgFeature(sli_b, hostport)
+
+			feature := &data.Featuredata{}
+			feature.Metadata = image.Metadata
+			feature.Attr = image.Attr
+			feature.Features = feature_vector
+
+			features = append(features, feature)
+		}
+		//入库
+		mongo := db.NewMongo()
+		mongo.Connect(conf.Mongo.Hosts, conf.Mongo.Feature.Db)
+		mongo.OpenDb(conf.Mongo.Feature.Db)
+		mongo.OpenTable(conf.Mongo.Feature.Collection)
+		defer mongo.Close()
+		for _, v := range features {
+			mongo.Insert(*v)
+		}
+	}
 }

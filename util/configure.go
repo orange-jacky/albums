@@ -34,7 +34,7 @@ type Nginx struct {
 }
 
 // Mongo mongo图片库和特征库配置
-type Mongo struct {
+type MyMongo struct {
 	Hosts string `xml:"hosts"`
 	//Image 图片库
 	Image struct {
@@ -53,7 +53,7 @@ type configure struct {
 	Gin     Gin       `xml:"gin"`
 	Feature MyFeature `xml:"feature"`
 	Nginx   Nginx     `xml:"nginx"`
-	Mongo   Mongo     `xml:"mongo"`
+	Mongo   MyMongo   `xml:"mongo"`
 }
 
 var (

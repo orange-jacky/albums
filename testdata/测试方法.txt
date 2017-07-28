@@ -18,6 +18,8 @@
 	测试下载
 	curl -XPOST localhost:9990/download
 
+	测试搜索
+	curl -F "image=@./100000.png" localhost:9990/search
 
 4.压力测试
 ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/download"

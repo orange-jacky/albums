@@ -31,6 +31,11 @@ func main() {
 	mylog := util.Mylog(configure.Log.File)
 	defer mylog.Flush()
 
+	//创建jobqueue
+	jobqueue := util.JobQueue()
+	jobqueue.Start()
+	defer jobqueue.Stop()
+
 	//设置gin模式
 	gin.SetMode(gin.ReleaseMode)
 	//配置路由

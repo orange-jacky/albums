@@ -29,9 +29,9 @@ type Images []*Imagedata
 
 // 图片特征数据
 type Featuredata struct {
-	Metadata
+	Metadata `bson:",inline"`
 	Features []float64 //图片特征向量
-	Attr
+	Attr     `bson:",inline"`
 }
 
 // 图片特征数组
