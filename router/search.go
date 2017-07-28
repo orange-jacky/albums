@@ -22,18 +22,27 @@ func Search(c *gin.Context) {
 
 	//获取图片内容
 	image, err := getsSearchFile(c)
+	if err != nil {
+		c.String(http.StatusOK, "%s", err.Error())
+	}
 	//提取特征
 	var feature_vector []float64
 	feature_vector, err = GetImgFeature(image, hostport)
-	fmt.Println("get feature:", feature_vector, err)
+	if err != nil {
+		c.String(http.StatusOK, "%s", err.Error())
+	}
+	//fmt.Println("get feature:", feature_vector, err)
 
 	//查特征库,找到对比数据
 	features, err := queryFeature(c)
-	fmt.Println("query collection:", features, err)
+	//fmt.Println("query collection:", features, err)
+	if err != nil {
+		c.String(http.StatusOK, "%s", err.Error())
+	}
 
 	//做卡方相似计算
 	ret := histogram(feature_vector, features)
-	fmt.Println("ret:", ret)
+	//fmt.Println("ret:", ret)
 
 	resp := Response{}
 	resp.Data = ret
