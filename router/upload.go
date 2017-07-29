@@ -173,8 +173,14 @@ func getImgFeature(input, output interface{}) {
 		mongo.OpenDb(conf.Mongo.Feature.Db)
 		mongo.OpenTable(conf.Mongo.Feature.Collection)
 		defer mongo.Close()
+
+		//log
+		mylog := util.Mylog("")
 		for _, v := range features {
-			mongo.Insert(*v)
+			err := mongo.Insert(*v)
+			if err != nil {
+				mylog.Errorf("%s", err.Error())
+			}
 		}
 	}
 }
