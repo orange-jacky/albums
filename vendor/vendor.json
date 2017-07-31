@@ -3,6 +3,12 @@
 	"ignore": "",
 	"package": [
 		{
+			"checksumSHA1": "YL34gM7C34at/b1cymZ1H3kVyWY=",
+			"path": "github.com/apache/thrift/lib/go/thrift",
+			"revision": "e8c71d8cc9d0138cd7f48616ce64b50ae0a1b932",
+			"revisionTime": "2015-11-23T10:51:37Z"
+		},
+		{
 			"checksumSHA1": "/Q1wCGb9psDJcsJCZT/5h3Z/B40=",
 			"path": "github.com/cihub/seelog",
 			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
