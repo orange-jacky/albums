@@ -36,3 +36,9 @@ type Featuredata struct {
 
 // 图片特征数组
 type Features []*Featuredata
+
+//用户collection
+type User struct {
+	UserName 		string
+	Password 		string
+}

@@ -9,6 +9,12 @@
 			"revisionTime": "2015-11-23T10:51:37Z"
 		},
 		{
+			"checksumSHA1": "GUKyDFvpbHomXDXWA0fTVL+LCYs=",
+			"path": "github.com/appleboy/gin-jwt",
+			"revision": "7eed1f4a9444e669bf88a4fda5599304dd9c9192",
+			"revisionTime": "2017-06-24T07:10:47Z"
+		},
+		{
 			"checksumSHA1": "/Q1wCGb9psDJcsJCZT/5h3Z/B40=",
 			"path": "github.com/cihub/seelog",
 			"revision": "f561c5e57575bb1e0a2167028b7339b3a8d16fb4",
@@ -74,6 +80,13 @@
 			"path": "github.com/gin-gonic/gin/binding/example",
 			"revision": "5ce686113b29d5b275bcf3a46d5896a26ec23595",
 			"revisionTime": "2017-07-02T10:46:36Z"
+		},
+		{
+			"checksumSHA1": "YOwO5bkv3ei+GTVZqeEVB30kXDM=",
+			"origin": "github.com/appleboy/gin-jwt/vendor/github.com/gin-gonic/gin/json",
+			"path": "github.com/gin-gonic/gin/json",
+			"revision": "7eed1f4a9444e669bf88a4fda5599304dd9c9192",
+			"revisionTime": "2017-06-24T07:10:47Z"
 		},
 		{
 			"checksumSHA1": "QxWUkHbaP30pLXxXp6jTSzn1NpA=",
@@ -171,6 +184,13 @@
 			"path": "golang.org/x/sys/unix",
 			"revision": "9ccfe848b9db8435a24c424abbc07a921adf1df5",
 			"revisionTime": "2017-04-27T03:54:25Z"
+		},
+		{
+			"checksumSHA1": "9QENMGpz4ELXL4R4DI69TzGHulw=",
+			"origin": "github.com/appleboy/gin-jwt/vendor/gopkg.in/dgrijalva/jwt-go.v3",
+			"path": "gopkg.in/dgrijalva/jwt-go.v3",
+			"revision": "7eed1f4a9444e669bf88a4fda5599304dd9c9192",
+			"revisionTime": "2017-06-24T07:10:47Z"
 		},
 		{
 			"checksumSHA1": "24wxwYO57BWvjPPSmCmWNFmmkv8=",

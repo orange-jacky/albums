@@ -36,6 +36,10 @@ type Nginx struct {
 // Mongo mongo图片库和特征库配置
 type MyMongo struct {
 	Hosts string `xml:"hosts"`
+	//User 用户库
+	User struct {
+		Db string `xml:"db"` //用户库名称
+	}`xml:"user"`
 	//Image 图片库
 	Image struct {
 		Db string `xml:"db"` //图片库名称

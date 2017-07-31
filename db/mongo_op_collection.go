@@ -65,6 +65,16 @@ func (m *Mongo) Insert(docs ...interface{}) error {
 	return m.C.Insert(docs...)
 }
 
+func (m *Mongo) FindUserOne(docs ... interface{}) bool {
+	result := User{}
+	m.C.Find(docs).One(result)
+	if len(result.UserName) != 0 {
+		return true
+	}else {
+		return false
+	}
+}
+
 func (m *Mongo) Close() error {
 	if m.S != nil {
 		m.S.LogoutAll()
