@@ -6,7 +6,6 @@ import (
 	"time"
 	"github.com/orange-jacky/albums/db"
 	"github.com/orange-jacky/albums/util"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/orange-jacky/albums/data"
 )
 
@@ -17,25 +16,27 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware{
 		Key:        []byte("secret key"),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
-		Authenticator: func(userName string, password string, c *gin.Context) (string, bool) {
+		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 			conf := util.Configure("")
 			mongoDB := db.NewMongo()
 			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
+			mongoDB.OpenDb(conf.Mongo.User.Db)
 			mongoDB.OpenTable("user")
 			defer mongoDB.Close()
-			if mongoDB.FindUserOne(bson.M{"userName":userName, "password":password}){
-				return userName, true
+			if mongoDB.FindUserOne(username){
+				return username, true
 			}
 
-			return userName, false
+			return username, false
 		},
-		Authorizator: func(userName string, c *gin.Context) bool {
+		Authorizator: func(username string, c *gin.Context) bool {
 			conf := util.Configure("")
 			mongoDB := db.NewMongo()
 			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
+			mongoDB.OpenDb(conf.Mongo.User.Db)
 			mongoDB.OpenTable("user")
 			defer mongoDB.Close()
-			if mongoDB.FindUserOne(bson.M{"userName":userName}) {
+			if mongoDB.FindUserOne(username) {
 				return true
 			}
 

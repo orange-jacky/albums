@@ -12,37 +12,45 @@ import (
 
 func SignUp(c *gin.Context) {
 	defer func (){
-		resp := data.Response{Status:-1, Data:"注册失败"}
-		c.JSON(http.StatusServiceUnavailable, resp)
+		if errStr := recover(); errStr != nil{
+			resp := data.Response{Status: -1, Data: "注册失败"}
+			c.JSON(http.StatusServiceUnavailable, resp)
+		}
 	}()
 	r := c.Request
 
 	conf := util.Configure("")
 
 	mongoDB := db.NewMongo()
-	mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
+	err := mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
+	if err!= nil{
+		log.Fatal(err)
+	}
+	mongoDB.OpenDb(conf.Mongo.User.Db)
 	mongoDB.OpenTable("user")
 	defer mongoDB.Close()
 
-	err := r.ParseMultipartForm(100000)
+	err = r.ParseMultipartForm(100000)
 	if err != nil{
 		errStr := "Parse form error"+err.Error()
 		log.Fatal(errStr)
 		panic(errStr)
 	}
 
-	userName := r.PostFormValue("userName")
+	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
 
-	if len(userName) == 0 && len(password) == 0{
-		log.Fatal("Get userName or password error")
-		panic("Get userName or password error")
+	if len(username) == 0 && len(password) == 0{
+		log.Fatal("Get username or password error")
+		panic("Get username or password error")
 	}else {
-		if mongoDB.FindUserOne(bson.M{"userName":userName}){
+		if mongoDB.FindUserOne(username){
 			resp := data.Response{Status:-2, Data:"用户已经注册过"}
 			c.JSON(http.StatusServiceUnavailable, resp)
+			return
 		}
-		mongoDB.Insert(bson.M{"userName":userName, "password": password})
+		mongoDB.Insert(bson.M{"username":username, "password": password})
 		c.JSON(http.StatusOK, data.Response{})
+		return
 	}
 }

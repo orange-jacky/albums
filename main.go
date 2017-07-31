@@ -36,17 +36,17 @@ func main() {
 	jobqueue.Start()
 	defer jobqueue.Stop()
 
-	authMiddleware := GetAuthMiddleware()
-
 	//设置gin模式
 	gin.SetMode(gin.ReleaseMode)
 	//配置路由
 	r := gin.Default()
 	r.POST("/signup", router.SignUp)
+	authMiddleware := GetAuthMiddleware()
 	r.POST("/login", authMiddleware.LoginHandler)
 	auth := r.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
+		auth.GET("/test", router.SignIn)
 		auth.POST("/upload", router.UpLoad)
 		auth.POST("/download", router.DownLoad)
 		auth.POST("/search", router.Search)

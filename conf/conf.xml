@@ -23,10 +23,13 @@
     <!--配置mongo信息-->        
     <mongo>
         <hosts>localhost:27017</hosts>
-        <!--配置图片库信息-->        
+        <!--配置图片库信息-->
         <image>
             <db>image</db>
         </image>
+        <user>
+            <db>user</db>
+        </user>
         <!--配置图片特征库信息-->        
         <feature>
             <db>imagefeature</db>

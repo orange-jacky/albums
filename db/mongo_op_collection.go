@@ -5,6 +5,9 @@ import (
 	"gopkg.in/mgo.v2"
 	"strings"
 	"time"
+	"log"
+	"fmt"
+	"gopkg.in/mgo.v2/bson"
 )
 
 //Mongo 定义mongo 操作实例
@@ -22,7 +25,8 @@ func NewMongo() *Mongo {
 }
 
 func (m *Mongo) Connect(hosts, db string) error {
-	dailinfo := &mgo.DialInfo{Addrs: strings.Split(hosts, ","),
+	dailinfo := &mgo.DialInfo{
+		Addrs: strings.Split(hosts, ","),
 		Timeout:  5 * time.Second,
 		Database: db,
 	}
@@ -65,10 +69,14 @@ func (m *Mongo) Insert(docs ...interface{}) error {
 	return m.C.Insert(docs...)
 }
 
-func (m *Mongo) FindUserOne(docs ... interface{}) bool {
-	result := User{}
-	m.C.Find(docs).One(result)
-	if len(result.UserName) != 0 {
+func (m *Mongo) FindUserOne(username string) bool {
+	count, err := m.C.Find(bson.M{"username":username}).Count()
+	fmt.Println(count)
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	if count != 0 {
 		return true
 	}else {
 		return false
