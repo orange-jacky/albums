@@ -34,8 +34,12 @@ func UpLoad(c *gin.Context) {
 	//提取图片信息
 	getImageInfo(c, &images)
 	//入库
-	gridfs.Insert(images)
-
+	dir := util.GetDir(getUser(c), getAlbum(c))
+	err := gridfs.Insert(dir, images)
+	if err != nil {
+		mylog := util.Mylog("")
+		mylog.Errorf("upload image insert mongo fail, %v", err)
+	}
 	//发送给提取特征和入库服务
 	send2GetFeature(getUser(c), getAlbum(c), images)
 
