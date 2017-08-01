@@ -3,11 +3,9 @@ package db
 import (
 	. "github.com/orange-jacky/albums/data"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"strings"
 	"time"
-	"log"
-	"fmt"
-	"gopkg.in/mgo.v2/bson"
 )
 
 //Mongo 定义mongo 操作实例
@@ -26,7 +24,7 @@ func NewMongo() *Mongo {
 
 func (m *Mongo) Connect(hosts, db string) error {
 	dailinfo := &mgo.DialInfo{
-		Addrs: strings.Split(hosts, ","),
+		Addrs:    strings.Split(hosts, ","),
 		Timeout:  5 * time.Second,
 		Database: db,
 	}
@@ -70,15 +68,13 @@ func (m *Mongo) Insert(docs ...interface{}) error {
 }
 
 func (m *Mongo) FindUserOne(username string) bool {
-	count, err := m.C.Find(bson.M{"username":username}).Count()
-	fmt.Println(count)
+	count, err := m.C.Find(bson.M{"username": username}).Count()
 	if err != nil {
-		log.Fatal(err)
 		return false
 	}
 	if count != 0 {
 		return true
-	}else {
+	} else {
 		return false
 	}
 }

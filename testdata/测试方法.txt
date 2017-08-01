@@ -12,17 +12,32 @@
 	新打开一个终端
 	cd $GOPATH/src/github.com/orange-jacky/albums/testdata
 
+	注册用户
+	curl -d "username=admin&password=admin" localhost:9990/signup
+
+	登陆用户, 
+	login是jwt内部模块,只认json格式的数据
+	curl -H "'Content-type':'application/json'" -d '{"username":"admin","password":"admin"}' localhost:9990/login
+	会返回token
+
+
+	test接口
+	其中Bearer 后面的token换成login登陆的token
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" localhost:9990/auth/test
+
+	上传,下载,搜索接口都加了用户jwt认证,使用接口前必须要先注册用户,再登陆用户,使用token
+
 	测试上传
-	curl -F "images=@./100000.png" localhost:9990/upload
+	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" -F "images=@./100000.png" localhost:9990/auth/upload
 
 	测试下载
-	curl -XPOST localhost:9990/download
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" localhost:9990/auth/download
 
 	测试搜索
-	curl -F "image=@./100000.png" localhost:9990/search
-
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" -F "image=@./100000.png" localhost:9990/auth/search
+	
 4.压力测试
-ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/download"
+ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/auth/download"
 
 其中 n 表示并发数量
 p 保存需要post的参数

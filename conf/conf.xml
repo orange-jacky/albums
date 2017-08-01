@@ -29,6 +29,7 @@
         </image>
         <user>
             <db>user</db>
+            <collection>user</collection>
         </user>
         <!--配置图片特征库信息-->        
         <feature>

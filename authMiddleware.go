@@ -1,16 +1,15 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/appleboy/gin-jwt"
-	"time"
+	"github.com/gin-gonic/gin"
+	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/db"
 	"github.com/orange-jacky/albums/util"
-	"github.com/orange-jacky/albums/data"
+	"time"
 )
 
-
-func GetAuthMiddleware() *jwt.GinJWTMiddleware{
+func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 	return &jwt.GinJWTMiddleware{
 		Realm:      "test zone",
 		Key:        []byte("secret key"),
@@ -21,9 +20,9 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware{
 			mongoDB := db.NewMongo()
 			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
 			mongoDB.OpenDb(conf.Mongo.User.Db)
-			mongoDB.OpenTable("user")
+			mongoDB.OpenTable(conf.Mongo.User.Collection)
 			defer mongoDB.Close()
-			if mongoDB.FindUserOne(username){
+			if mongoDB.FindUserOne(username) {
 				return username, true
 			}
 
@@ -34,16 +33,15 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware{
 			mongoDB := db.NewMongo()
 			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
 			mongoDB.OpenDb(conf.Mongo.User.Db)
-			mongoDB.OpenTable("user")
+			mongoDB.OpenTable(conf.Mongo.User.Collection)
 			defer mongoDB.Close()
 			if mongoDB.FindUserOne(username) {
 				return true
 			}
-
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			resp := data.Response{Status:code, Data:message}
+			resp := data.Response{Status: code, Data: message}
 			c.JSON(code, resp)
 		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
