@@ -30,7 +30,7 @@ type Images []*Imagedata
 // 图片特征数据
 type Featuredata struct {
 	Metadata `bson:",inline"`
-	Features []float64 //图片特征向量
+	Features []float64 `bson:"features" json:"-"` //图片特征向量
 	Attr     `bson:",inline"`
 }
 
@@ -39,6 +39,6 @@ type Features []*Featuredata
 
 //用户collection
 type User struct {
-	UserName 		string
-	Password 		string
+	UserName string
+	Password string
 }

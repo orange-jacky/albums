@@ -38,40 +38,33 @@ func (m *MongoGridfs) Query(query interface{}) (images []map[string]interface{},
 	return images, nil
 }
 
-func (m *MongoGridfs) Insert(dir string, docs ...interface{}) error {
-	for _, doc := range docs {
-		//类型诊断
-		if images, ok := doc.(Images); ok {
-			for _, image := range images {
-				//文件路径
-				filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Filename)
-				//
-				file, err := os.Open(filename)
-				if err != nil {
-					return err
-				}
-				defer file.Close()
-				content, err := ioutil.ReadAll(file)
-				if err != nil {
-					return err
-				}
-				//
-				gridfile, err := m.GridFS.Create(filename)
-				if err != nil {
-					return err
-				}
-				defer gridfile.Close()
-				gridfile.SetId(image.Id)
-				gridfile.SetName(image.Filename)
-				gridfile.SetContentType(image.ContentType)
-				gridfile.SetMeta(image.Metadata)
+func (m *MongoGridfs) Insert(dir string, docs Images) error {
+	for _, image := range docs {
+		//文件路径
+		filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Filename)
+		//
+		file, err := os.Open(filename)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		content, err := ioutil.ReadAll(file)
+		if err != nil {
+			return err
+		}
+		//
+		gridfile, err := m.GridFS.Create(filename)
+		if err != nil {
+			return err
+		}
+		defer gridfile.Close()
+		gridfile.SetId(image.Id)
+		gridfile.SetName(image.Filename)
+		gridfile.SetContentType(image.ContentType)
+		gridfile.SetMeta(image.Metadata)
 
-				if _, err := gridfile.Write(content); err != nil {
-					return err
-				}
-			}
-		} else {
-			fmt.Println("type assert fail")
+		if _, err := gridfile.Write(content); err != nil {
+			return err
 		}
 	}
 	return nil

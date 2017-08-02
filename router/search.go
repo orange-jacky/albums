@@ -102,10 +102,10 @@ func histogram(search_vector []float64, features Features) (ret Features) {
 		distance float64
 		feature  *Featuredata
 	}
-	var sli []A
+	var sli []*A
 	for _, feature := range features {
 		d := chi2_distance(search_vector, feature.Features)
-		a := A{d, feature}
+		a := &A{d, feature}
 		sli = append(sli, a)
 	}
 	sort.Slice(sli, func(i, j int) bool { return sli[i].distance < sli[j].distance })
@@ -116,6 +116,7 @@ func histogram(search_vector []float64, features Features) (ret Features) {
 			break
 		}
 		ret = append(ret, a.feature)
+		//fmt.Println(a.distance, a.feature)
 	}
 	return ret
 }

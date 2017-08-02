@@ -23,18 +23,18 @@
 
 	test接口
 	其中Bearer 后面的token换成login登陆的token
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" localhost:9990/auth/test
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE2Mzk4MTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTYzNjIxNn0.KR0QSIOpehMvEWSWj7MERilj0QWcx8rqwcE_Iy8CzKk" localhost:9990/auth/test
 
 	上传,下载,搜索接口都加了用户jwt认证,使用接口前必须要先注册用户,再登陆用户,使用token
 
 	测试上传
-	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" -F "images=@./100000.png" localhost:9990/auth/upload
+	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE2Mzk4MTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTYzNjIxNn0.KR0QSIOpehMvEWSWj7MERilj0QWcx8rqwcE_Iy8CzKk" -F "images=@./100000.png" localhost:9990/auth/upload
 
 	测试下载
-	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" localhost:9990/auth/download
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE2Mzk4MTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTYzNjIxNn0.KR0QSIOpehMvEWSWj7MERilj0QWcx8rqwcE_Iy8CzKk" localhost:9990/auth/download
 
 	测试搜索
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE1NzgzNzcsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTU3NDc3N30.pGjGwjHeelgzCE-l_-252bdKYEn03xf2rJEwyVIQpV0" -F "image=@./100000.png" localhost:9990/auth/search
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE2Mzk4MTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTYzNjIxNn0.KR0QSIOpehMvEWSWj7MERilj0QWcx8rqwcE_Iy8CzKk" -F "image=@./100000.png" localhost:9990/auth/search
 	
 4.压力测试
 ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/auth/download"

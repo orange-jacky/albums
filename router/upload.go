@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common"
 	. "github.com/orange-jacky/albums/common/jobqueue"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/db"
@@ -20,7 +21,7 @@ import (
 // UpLoad 上传图片到相册
 func UpLoad(c *gin.Context) {
 	conf := util.Configure("")
-	//log := util.Mylog("")
+	log := util.Mylog("")
 
 	//新建一个图片库连接
 	gridfs := db.NewMongoGridfs()
@@ -30,18 +31,25 @@ func UpLoad(c *gin.Context) {
 	defer gridfs.Close()
 
 	//先缓存文件
-	images, _ := cacheFile(c)
-	//提取图片信息
-	getImageInfo(c, &images)
-	//入库
-	dir := util.GetDir(getUser(c), getAlbum(c))
-	err := gridfs.Insert(dir, images)
+	images, dir, err := cacheFile(c)
 	if err != nil {
-		mylog := util.Mylog("")
-		mylog.Errorf("upload image insert mongo fail, %v", err)
+		clearCache(dir)
+		log.Errorf("upload cache images fail, %v", err)
+		resp := data.Response{Status: -1, Data: fmt.Sprintf("upload cache images fail, %v", err)}
+		c.JSON(http.StatusOK, resp)
+	}
+	//提取图片信息
+	getImageInfo(c, getUser(c), getAlbum(c), dir, &images)
+	//入库
+	err = gridfs.Insert(dir, images)
+	if err != nil {
+		clearCache(dir)
+		log.Errorf("upload image insert mongo fail, %v", err)
+		resp := data.Response{Status: -2, Data: fmt.Sprintf("upload image insert mongo fail, %v", err)}
+		c.JSON(http.StatusOK, resp)
 	}
 	//发送给提取特征和入库服务
-	send2GetFeature(getUser(c), getAlbum(c), images)
+	send2GetFeature(dir, images)
 
 	resp := data.Response{}
 	resp.Data = images
@@ -50,13 +58,19 @@ func UpLoad(c *gin.Context) {
 }
 
 // cacheFile 先把上传文件缓存到本地磁盘
-func cacheFile(c *gin.Context) (images data.Images, err error) {
+func cacheFile(c *gin.Context) (images data.Images, dir string, err error) {
+
+	//根据上传时间,生成上传的唯一目录
+	user := getUser(c)
+	album := getAlbum(c)
+	dir = util.GetDir(user, album, fmt.Sprintf("%d", GetNano()))
+
 	r := c.Request
 	//POST takes the uploaded file(s) and saves it to disk.
 	//parse the multipart form in the request
 	err = r.ParseMultipartForm(100000)
 	if err != nil {
-		return images, err
+		return images, dir, err
 	}
 	//get a ref to the parsed multipart form
 	m := r.MultipartForm
@@ -65,15 +79,12 @@ func cacheFile(c *gin.Context) (images data.Images, err error) {
 
 	//post 没有文件直接返回
 	if len(files) == 0 {
-		return images, nil
+		return images, dir, fmt.Errorf("not post images")
 	}
 	//创建临时缓存目录
-	user := getUser(c)
-	album := getAlbum(c)
-	dir := util.GetDir(user, album)
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
-		return images, err
+		return images, dir, fmt.Errorf("create dir %s fail,%+v", dir, err)
 	}
 	//取所有上传文件
 	for i, _ := range files {
@@ -91,13 +102,10 @@ func cacheFile(c *gin.Context) (images data.Images, err error) {
 		defer dst.Close()
 		io.Copy(dst, src)
 	}
-	return images, nil
+	return images, dir, nil
 }
 
-func getImageInfo(c *gin.Context, images *data.Images) {
-	user := getUser(c)
-	album := getAlbum(c)
-	dir := util.GetDir(user, album)
+func getImageInfo(c *gin.Context, user, album, dir string, images *data.Images) {
 
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		//跳过目录
@@ -132,9 +140,7 @@ type A struct {
 	images data.Images
 }
 
-func send2GetFeature(user, album string, images data.Images) {
-	dir := util.GetDir(user, album)
-
+func send2GetFeature(dir string, images data.Images) {
 	a := A{dir, images}
 	var feature []float64
 

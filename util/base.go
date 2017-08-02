@@ -19,6 +19,6 @@ func DirSeg() string {
 	return s
 }
 
-func GetDir(user, album string) string {
-	return fmt.Sprintf("filecache%s%s%s%s", DirSeg(), user, DirSeg(), album)
+func GetDir(user, album, time string) string {
+	return fmt.Sprintf("filecache%s%s%s%s-%s", DirSeg(), user, DirSeg(), album, time)
 }
