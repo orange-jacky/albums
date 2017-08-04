@@ -20,7 +20,6 @@
 	curl -H "'Content-type':'application/json'" -d '{"username":"admin","password":"admin"}' localhost:9990/login
 	会返回token
 
-
 	test接口
 	其中Bearer 后面的token换成login登陆的token
 	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDE2Mzk4MTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwMTYzNjIxNn0.KR0QSIOpehMvEWSWj7MERilj0QWcx8rqwcE_Iy8CzKk" localhost:9990/auth/test

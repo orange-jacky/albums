@@ -6,7 +6,8 @@
     </log>
     <!--配置gin http服务信息-->
     <gin>
-        <host>localhost</host>
+        <!--指定host,只能通过host访问,不指定host,通过部署主机的任意ip地址都可以访问-->        
+        <host></host>
         <port>9990</port>
     </gin>
     <!--配置c++实施提取图片特征信息-->        
