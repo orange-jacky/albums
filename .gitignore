@@ -19,3 +19,5 @@ filecache/
 .DS_Store
 
 .DS_Store
+
+sftp-config.json
