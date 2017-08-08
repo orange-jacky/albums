@@ -108,6 +108,12 @@ func cacheFile(c *gin.Context) (images data.Images, dir string, err error) {
 func getImageInfo(c *gin.Context, user, album, dir string, images *data.Images) {
 
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		//处理walk时的error
+		if err != nil {
+			mylog := util.Mylog("")
+			mylog.Errorf("filepath.walk %s %s fail,%s", dir, path, err.Error())
+			return nil
+		}
 		//跳过目录
 		if info.IsDir() {
 			return nil
