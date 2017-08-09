@@ -38,5 +38,10 @@
             <db>imagefeature</db>
             <collection>imagefeature</collection>
         </feature>
+        <!--保存用户与图片url关联属性-->
+        <userimage>
+            <db>userimage</db>
+            <collection>userimage</collection>
+        </userimage>
     </mongo>
 </configure>

@@ -39,9 +39,11 @@ func UpLoad(c *gin.Context) {
 		c.JSON(http.StatusOK, resp)
 		return
 	}
+
 	//提取图片信息
 	getImageInfo(c, getUser(c), getAlbum(c), dir, &images)
-	//入库
+
+	//图片入库
 	err = gridfs.Insert(dir, images)
 	if err != nil {
 		clearCache(dir)
@@ -50,6 +52,10 @@ func UpLoad(c *gin.Context) {
 		c.JSON(http.StatusOK, resp)
 		return
 	}
+
+	//用户和图片关联信息入库
+	saveUserImages(c, images)
+
 	//发送给提取特征和入库服务
 	send2GetFeature(dir, images)
 
@@ -130,6 +136,7 @@ func getImageInfo(c *gin.Context, user, album, dir string, images *data.Images) 
 			return nil
 		}
 		filename := filepath.Base(path)
+
 		img := &data.Imagedata{}
 		img.User = user
 		img.Album = album
@@ -138,15 +145,49 @@ func getImageInfo(c *gin.Context, user, album, dir string, images *data.Images) 
 		ext := strings.ToLower(sli[len(sli)-1])
 		img.Type = ext
 		img.Updatetime = util.GetMills()
-		img.Filename = filename
+
 		img.ContentType = fmt.Sprintf("image/%s", ext)
-		img.Id = fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s%s%s%v", user, album, filename, img.Updatetime))))
+
+		//计算文件md5值
+		content, err := ioutil.ReadFile(path)
+		if err != nil || len(content) == 0 {
+			return nil
+		}
+		img.Filename = fmt.Sprintf("%x", md5.Sum(content))
 
 		*images = append(*images, img)
 		return nil
 	})
 }
 
+//用户和图片关联信息入库
+func saveUserImages(c *gin.Context, images data.Images) {
+	var userimages data.UserImages
+	for _, image := range images {
+		uimage := &data.UserImage{}
+		uimage.Metadata = image.Metadata
+		uimage.Attr = image.Attr
+		userimages = append(userimages, uimage)
+	}
+
+	conf := util.Configure("")
+	//入库
+	mongo := db.NewMongo()
+	mongo.Connect(conf.Mongo.Hosts, conf.Mongo.UserImage.Db)
+	mongo.OpenDb(conf.Mongo.UserImage.Db)
+	mongo.OpenTable(conf.Mongo.UserImage.Collection)
+	defer mongo.Close()
+	//log
+	mylog := util.Mylog("")
+	for _, v := range userimages {
+		err := mongo.Insert(v)
+		if err != nil {
+			mylog.Errorf("%s", err.Error())
+		}
+	}
+}
+
+//清理掉缓存文件
 func clearCache(dir string) {
 	os.RemoveAll(dir)
 }

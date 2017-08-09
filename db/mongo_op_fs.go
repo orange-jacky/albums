@@ -23,6 +23,7 @@ func (m *MongoGridfs) OpenTable(table string) error {
 	return nil
 }
 
+/*
 func (m *MongoGridfs) Query(query interface{}) (images []map[string]interface{}, err error) {
 	record := make(map[string]interface{})
 	iter := m.GridFS.Find(query).Iter()
@@ -37,11 +38,24 @@ func (m *MongoGridfs) Query(query interface{}) (images []map[string]interface{},
 	}
 	return images, nil
 }
+*/
+func (m *MongoGridfs) Query(query interface{}) (images Images, err error) {
+	record := new(Imagedata)
+	iter := m.C.Find(query).Iter()
+	for iter.Next(record) {
+		images = append(images, record)
+		record = new(Imagedata) //重置变量
+	}
+	if err := iter.Close(); err != nil {
+		return images, err
+	}
+	return images, nil
+}
 
 func (m *MongoGridfs) Insert(dir string, docs Images) error {
 	for _, image := range docs {
 		//文件路径
-		filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Filename)
+		filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Name)
 		//
 		file, err := os.Open(filename)
 		if err != nil {
@@ -58,7 +72,6 @@ func (m *MongoGridfs) Insert(dir string, docs Images) error {
 			return err
 		}
 		defer gridfile.Close()
-		gridfile.SetId(image.Id)
 		gridfile.SetName(image.Filename)
 		gridfile.SetContentType(image.ContentType)
 		gridfile.SetMeta(image.Metadata)

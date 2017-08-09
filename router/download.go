@@ -15,17 +15,18 @@ func DownLoad(c *gin.Context) {
 	//log := util.Mylog("")
 
 	//新建一个图片库连接
-	gridfs := db.NewMongoGridfs()
-	gridfs.Connect(conf.Mongo.Hosts, conf.Mongo.Image.Db)
-	gridfs.OpenDb(conf.Mongo.Image.Db)
-	gridfs.OpenTable("fs")
-	defer gridfs.Close()
+	mongo := db.NewMongo()
+	mongo.Connect(conf.Mongo.Hosts, conf.Mongo.UserImage.Db)
+	mongo.OpenDb(conf.Mongo.UserImage.Db)
+	mongo.OpenTable(conf.Mongo.UserImage.Collection)
+	defer mongo.Close()
 
 	//查数据库
 	user := getUser(c)
 	album := getAlbum(c)
-	query := bson.M{"metadata.user": user, "metadata.album": album}
-	images, _ := gridfs.Query(query)
+	//query := bson.M{"metadata.user": user, "metadata.album": album}
+	query := bson.M{"user": user, "album": album}
+	images, _ := mongo.Query(query)
 	//返回数据
 
 	//处理访问id

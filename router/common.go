@@ -28,17 +28,11 @@ func handlerUrl(i interface{}) {
 	switch i.(type) {
 	case data.Images:
 		for _, image := range i.(data.Images) {
-			image.Id = fmt.Sprintf("%s/%v", url, image.Id)
+			image.Filename = fmt.Sprintf("%s/%v", url, image.Filename)
 		}
 	case data.Features:
 		for _, feature := range i.(data.Features) {
-			feature.Id = fmt.Sprintf("%s/%v", url, feature.Id)
-		}
-	case []map[string]interface{}:
-		for _, m := range i.([]map[string]interface{}) {
-			if v, ok := m["_id"]; ok {
-				m["_id"] = fmt.Sprintf("%s/%s", url, v.(string))
-			}
+			feature.Filename = fmt.Sprintf("%s/%v", url, feature.Filename)
 		}
 	}
 }

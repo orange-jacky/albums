@@ -46,6 +46,11 @@ type MyMongo struct {
 	Image struct {
 		Db string `xml:"db"` //图片库名称
 	} `xml:"image"`
+	//UserImage 用户和图片关联库
+	UserImage struct {
+		Db         string `xml:"db"`         //特征库名称
+		Collection string `xml:"collection"` //特征表
+	} `xml:"userimage"`
 	// Feature 特征库
 	Feature struct {
 		Db         string `xml:"db"`         //特征库名称
