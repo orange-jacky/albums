@@ -18,7 +18,8 @@
     <!--配置nginx信息,通过nginx-gridfs获取图片-->        
     <nginx>
         <host>localhost</host>
-        <port>9992</port>
+        <host_inter>59.110.160.110</host_inter>
+        <port>9999</port>
         <router>image</router>
     </nginx>
     <!--配置mongo信息-->        

@@ -53,8 +53,17 @@ func UpLoad(c *gin.Context) {
 	//发送给提取特征和入库服务
 	send2GetFeature(dir, images)
 
+	//处理访问id
+	ret_images := make(data.Images, 0)
+	for _, image := range images {
+		d := &data.Imagedata{}
+		*d = *image
+		ret_images = append(ret_images, d)
+	}
+	handlerUrl(ret_images)
+
 	resp := data.Response{}
-	resp.Data = images
+	resp.Data = ret_images
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "upload")
 }

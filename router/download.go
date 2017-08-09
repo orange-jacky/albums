@@ -27,6 +27,10 @@ func DownLoad(c *gin.Context) {
 	query := bson.M{"metadata.user": user, "metadata.album": album}
 	images, _ := gridfs.Query(query)
 	//返回数据
+
+	//处理访问id
+	handlerUrl(images)
+
 	resp := data.Response{}
 	resp.Data = images
 	c.JSON(http.StatusOK, resp)

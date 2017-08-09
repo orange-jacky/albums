@@ -47,6 +47,9 @@ func Search(c *gin.Context) {
 	ret := histogram(feature_vector, features)
 	//fmt.Println("ret:", ret)
 
+	//处理访问id
+	handlerUrl(ret)
+
 	resp := Response{}
 	resp.Data = ret
 	c.JSON(http.StatusOK, resp)

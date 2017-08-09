@@ -28,9 +28,10 @@ type MyFeature struct {
 
 // Nginx nginx-gridfs 获取图片配置
 type Nginx struct {
-	Host   string `xml:"host"`
-	Port   string `xml:"port"`
-	Router string `xml:"router"`
+	Host      string `xml:"host"`
+	HostInter string `xml:"host_inter"`
+	Port      string `xml:"port"`
+	Router    string `xml:"router"`
 }
 
 // Mongo mongo图片库和特征库配置

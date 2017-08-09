@@ -22,3 +22,9 @@ func DirSeg() string {
 func GetDir(user, album, time string) string {
 	return fmt.Sprintf("filecache%s%s%s%s-%s", DirSeg(), user, DirSeg(), album, time)
 }
+
+//生成访问图片路由
+func GetUrl() string {
+	conf := Configure("")
+	return fmt.Sprintf("%s:%s/%s", conf.Nginx.HostInter, conf.Nginx.Port, conf.Nginx.Router)
+}
