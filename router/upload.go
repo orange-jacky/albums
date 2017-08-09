@@ -37,6 +37,7 @@ func UpLoad(c *gin.Context) {
 		log.Errorf("upload cache images fail, %v", err)
 		resp := data.Response{Status: -1, Data: fmt.Sprintf("upload cache images fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
+		return
 	}
 	//提取图片信息
 	getImageInfo(c, getUser(c), getAlbum(c), dir, &images)
@@ -47,6 +48,7 @@ func UpLoad(c *gin.Context) {
 		log.Errorf("upload image insert mongo fail, %v", err)
 		resp := data.Response{Status: -2, Data: fmt.Sprintf("upload image insert mongo fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
+		return
 	}
 	//发送给提取特征和入库服务
 	send2GetFeature(dir, images)
@@ -170,6 +172,10 @@ func getImgFeature(input, output interface{}) {
 			filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Metadata.Name)
 			sli_b, err := ioutil.ReadFile(filename)
 			if err != nil {
+				continue
+			}
+			//读到文件大小为0
+			if len(sli_b) == 0 {
 				continue
 			}
 			//提取特征

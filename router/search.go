@@ -24,12 +24,14 @@ func Search(c *gin.Context) {
 	image, err := getsSearchFile(c)
 	if err != nil {
 		c.String(http.StatusOK, "%s", err.Error())
+		return
 	}
 	//提取特征
 	var feature_vector []float64
 	feature_vector, err = GetImgFeature(image, hostport)
 	if err != nil {
 		c.String(http.StatusOK, "%s", err.Error())
+		return
 	}
 	//fmt.Println("get feature:", feature_vector, err)
 
@@ -38,6 +40,7 @@ func Search(c *gin.Context) {
 	//fmt.Println("query collection:", features, err)
 	if err != nil {
 		c.String(http.StatusOK, "%s", err.Error())
+		return
 	}
 
 	//做卡方相似计算
