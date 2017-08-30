@@ -104,7 +104,7 @@ func cacheFile(c *gin.Context) (images data.Images, dir string, err error) {
 		return images, dir, fmt.Errorf("create dir %s fail,%+v", dir, err)
 	}
 	//取所有上传文件
-	for i, _ := range files {
+	for i := range files {
 		//for each fileheader, get a handle to the actual file
 		src, err := files[i].Open()
 		if err != nil {
