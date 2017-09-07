@@ -1,6 +1,6 @@
 package data
 
 type Album struct {
-	User   string
-	Albums []string
+	User   string   `json:"user"`
+	Albums []string `json:"albums"`
 }

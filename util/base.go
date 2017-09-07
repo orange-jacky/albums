@@ -30,7 +30,7 @@ func GetAlbumName(c *gin.Context) string {
 func HandleUrl(imageinfos data.ImageInfos) {
 	url := GetUrl()
 	for _, info := range imageinfos {
-		info.Url = fmt.Sprintf("%s/%v", url, info.Url)
+		info.Url = fmt.Sprintf("%s/%v", url, info.Md5)
 	}
 }
 
