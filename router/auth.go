@@ -1,10 +1,9 @@
-package main
+package router
 
 import (
 	"github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/orange-jacky/albums/data"
-	"github.com/orange-jacky/albums/db"
 	"github.com/orange-jacky/albums/util"
 	"time"
 )
@@ -16,29 +15,16 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
-			conf := util.Configure("")
-			mongoDB := db.NewMongo()
-			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
-			mongoDB.OpenDb(conf.Mongo.User.Db)
-			mongoDB.OpenTable(conf.Mongo.User.Collection)
-			defer mongoDB.Close()
-			if mongoDB.FindUserOne(username) {
+			user := util.GetUser()
+			status, _ := user.CheckUser(username, password)
+			if status > 0 {
 				return username, true
 			}
-
 			return username, false
 		},
 		Authorizator: func(username string, c *gin.Context) bool {
-			conf := util.Configure("")
-			mongoDB := db.NewMongo()
-			mongoDB.Connect(conf.Mongo.Hosts, conf.Mongo.User.Db)
-			mongoDB.OpenDb(conf.Mongo.User.Db)
-			mongoDB.OpenTable(conf.Mongo.User.Collection)
-			defer mongoDB.Close()
-			if mongoDB.FindUserOne(username) {
-				return true
-			}
-			return false
+			user := util.GetUser()
+			return user.FindUser(username)
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			resp := data.Response{Status: code, Data: message}

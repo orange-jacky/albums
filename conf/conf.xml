@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configure>
-    <!--配置日志-->
+    <!--日志-->
     <log>
         <file>conf/log.xml</file>
     </log>
-    <!--配置gin http服务信息-->
+    <!--gin http服务信息-->
     <gin>
         <!--指定host,只能通过host访问,不指定host,通过部署主机的任意ip地址都可以访问-->        
         <host></host>
         <port>9990</port>
     </gin>
-    <!--配置c++实施提取图片特征信息-->        
+    <!--c++实施提取图片特征信息-->        
     <feature>
         <host>localhost</host>
         <port>9091</port>
     </feature>
-    <!--配置nginx信息,通过nginx-gridfs获取图片-->        
+    <!--nginx,通过nginx-gridfs获取图片-->        
     <nginx>
         <host>localhost</host>
         <host_inter>59.110.160.110</host_inter>
         <port>9999</port>
         <router>image</router>
     </nginx>
-    <!--配置mongo信息-->        
+    <!--mongo信息-->        
     <mongo>
         <hosts>localhost:27017</hosts>
-        <!--配置图片库信息-->
-        <image>
-            <db>image</db>
-        </image>
+         <!--用户-->
         <user>
             <db>user</db>
             <collection>user</collection>
         </user>
-        <!--配置图片特征库信息-->        
-        <feature>
-            <db>imagefeature</db>
-            <collection>imagefeature</collection>
-        </feature>
-        <!--保存用户与图片url关联属性-->
-        <userimage>
-            <db>userimage</db>
-            <collection>userimage</collection>
-        </userimage>
+        <!--相册-->
+        <album>
+            <db>album</db>
+            <collection>album</collection>
+        </album>
+        <!--图片库-->
+        <image>
+            <db>image</db>
+        </image>
+        <!--图片信息,包含特征值-->        
+        <imageinfo>
+            <db>imageinfo</db>
+            <collection>imageinfo</collection>
+        </imageinfo>
     </mongo>
 </configure>

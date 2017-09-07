@@ -21,7 +21,7 @@ type Gin struct {
 }
 
 // Feature 实时提取特征向量配置
-type MyFeature struct {
+type Feature struct {
 	Host string `xml:"host"`
 	Port string `xml:"port"`
 }
@@ -34,37 +34,31 @@ type Nginx struct {
 	Router    string `xml:"router"`
 }
 
+type DBTable struct {
+	Db         string `xml:"db"`
+	Collection string `xml:"collection"`
+}
+
 // Mongo mongo图片库和特征库配置
-type MyMongo struct {
+type Mongo struct {
 	Hosts string `xml:"hosts"`
-	//User 用户库
-	User struct {
-		Db         string `xml:"db"`         //用户库名称
-		Collection string `xml:"collection"` //用户表
-	} `xml:"user"`
-	//Image 图片库
-	Image struct {
-		Db string `xml:"db"` //图片库名称
-	} `xml:"image"`
-	//UserImage 用户和图片关联库
-	UserImage struct {
-		Db         string `xml:"db"`         //特征库名称
-		Collection string `xml:"collection"` //特征表
-	} `xml:"userimage"`
-	// Feature 特征库
-	Feature struct {
-		Db         string `xml:"db"`         //特征库名称
-		Collection string `xml:"collection"` //特征表
-	} `xml:"feature"`
+	// 用户库
+	User DBTable `xml:"user"`
+	// 相册库
+	Album DBTable `xml:"album"`
+	// 图片库
+	Image DBTable `xml:"image"`
+	// 图片信息库
+	ImageInfo DBTable `xml:"imageinfo"`
 }
 
 type configure struct {
-	XMLName xml.Name  `xml:"configure"`
-	Log     Log       `xml:"log"`
-	Gin     Gin       `xml:"gin"`
-	Feature MyFeature `xml:"feature"`
-	Nginx   Nginx     `xml:"nginx"`
-	Mongo   MyMongo   `xml:"mongo"`
+	XMLName xml.Name `xml:"configure"`
+	Log     Log      `xml:"log"`
+	Gin     Gin      `xml:"gin"`
+	Feature Feature  `xml:"feature"`
+	Nginx   Nginx    `xml:"nginx"`
+	Mongo   Mongo    `xml:"mongo"`
 }
 
 var (
@@ -93,4 +87,8 @@ func (c *configure) init(file string) error {
 	content, _ := ioutil.ReadAll(fd)
 	xml.Unmarshal(content, c)
 	return nil
+}
+
+func GetConfigure() *configure {
+	return conf
 }

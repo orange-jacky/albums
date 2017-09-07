@@ -4,187 +4,111 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	. "github.com/orange-jacky/albums/common"
 	. "github.com/orange-jacky/albums/common/jobqueue"
 	"github.com/orange-jacky/albums/data"
-	"github.com/orange-jacky/albums/db"
-	. "github.com/orange-jacky/albums/feature"
 	"github.com/orange-jacky/albums/util"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // UpLoad 上传图片到相册
 func UpLoad(c *gin.Context) {
-	conf := util.Configure("")
-	log := util.Mylog("")
-
-	//新建一个图片库连接
-	gridfs := db.NewMongoGridfs()
-	gridfs.Connect(conf.Mongo.Hosts, conf.Mongo.Image.Db)
-	gridfs.OpenDb(conf.Mongo.Image.Db)
-	gridfs.OpenTable("fs")
-	defer gridfs.Close()
-
+	user := util.GetUserName(c)
+	album := util.GetAlbumName(c)
 	//先缓存文件
-	images, dir, err := cacheFile(c)
+	images, imageinfos, dir, err := cacheFile(user, album, c)
 	if err != nil {
 		clearCache(dir)
-		log.Errorf("upload cache images fail, %v", err)
+		mylog := util.GetMylog()
+		mylog.Errorf("upload cache images fail, %v", err)
 		resp := data.Response{Status: -1, Data: fmt.Sprintf("upload cache images fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
 		return
 	}
-
-	//提取图片信息
-	getImageInfo(c, getUser(c), getAlbum(c), dir, &images)
-
 	//图片入库
-	err = gridfs.Insert(dir, images)
+	err = handleImage(images)
 	if err != nil {
 		clearCache(dir)
-		log.Errorf("upload image insert mongo fail, %v", err)
+		mylog := util.GetMylog()
+		mylog.Errorf("upload image insert mongo fail, %v", err)
 		resp := data.Response{Status: -2, Data: fmt.Sprintf("upload image insert mongo fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
 		return
 	}
-
-	//用户和图片关联信息入库
-	saveUserImages(c, images)
-
-	//发送给提取特征和入库服务
-	send2GetFeature(dir, images)
-
-	//处理访问id
-	ret_images := make(data.Images, 0)
-	for _, image := range images {
-		d := &data.Imagedata{}
-		*d = *image
-		ret_images = append(ret_images, d)
-	}
-	handlerUrl(ret_images)
+	//提取特征和入库服务
+	handleImageInfos(dir, imageinfos)
+	util.HandleUrl(imageinfos)
 
 	resp := data.Response{}
-	resp.Data = ret_images
+	resp.Data = imageinfos
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "upload")
 }
 
 // cacheFile 先把上传文件缓存到本地磁盘
-func cacheFile(c *gin.Context) (images data.Images, dir string, err error) {
-
+func cacheFile(user, album string, c *gin.Context) (images data.Images, imageinfos data.ImageInfos,
+	dir string, err error) {
 	//根据上传时间,生成上传的唯一目录
-	user := getUser(c)
-	album := getAlbum(c)
-	dir = util.GetDir(user, album, fmt.Sprintf("%d", GetNano()))
+	dir = util.GetDir(user, album, fmt.Sprintf("%d", util.GetNano()))
 
 	r := c.Request
 	//POST takes the uploaded file(s) and saves it to disk.
 	//parse the multipart form in the request
 	err = r.ParseMultipartForm(100000)
 	if err != nil {
-		return images, dir, err
+		return images, imageinfos, dir, err
 	}
 	//get a ref to the parsed multipart form
 	m := r.MultipartForm
 	//get the *fileheaders
 	files := m.File["images"] //表单的name,id
-
-	//post 没有文件直接返回
-	if len(files) == 0 {
-		return images, dir, fmt.Errorf("not post images")
-	}
 	//创建临时缓存目录
 	err = os.MkdirAll(dir, os.ModePerm)
 	if err != nil {
-		return images, dir, fmt.Errorf("create dir %s fail,%+v", dir, err)
+		return images, imageinfos, dir, fmt.Errorf("create dir %s fail,%+v", dir, err)
 	}
 	//取所有上传文件
-	for i := range files {
+	for _, v := range files {
 		//for each fileheader, get a handle to the actual file
-		src, err := files[i].Open()
+		src, err := v.Open()
 		if err != nil {
 			continue
 		}
 		defer src.Close()
+		filename := v.Filename
+		path := filepath.Join(dir, filename)
 		//create destination file making sure the path is writeable.
-		dst, err := os.Create(fmt.Sprintf("%s%s%s", dir, util.DirSeg(), files[i].Filename))
+		dst, err := os.Create(path)
 		if err != nil {
 			continue
 		}
 		defer dst.Close()
 		io.Copy(dst, src)
-	}
-	return images, dir, nil
-}
-
-func getImageInfo(c *gin.Context, user, album, dir string, images *data.Images) {
-
-	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		//处理walk时的error
-		if err != nil {
-			mylog := util.Mylog("")
-			mylog.Errorf("filepath.walk %s %s fail,%s", dir, path, err.Error())
-			return nil
-		}
-		//跳过目录
-		if info.IsDir() {
-			return nil
-		}
-		filename := filepath.Base(path)
-
-		img := &data.Imagedata{}
-		img.User = user
-		img.Album = album
-		img.Name = filename
-		sli := strings.Split(filename, ".")
-		ext := strings.ToLower(sli[len(sli)-1])
-		img.Type = ext
-		img.Updatetime = util.GetMills()
-
-		img.ContentType = fmt.Sprintf("image/%s", ext)
 
 		//计算文件md5值
-		content, err := ioutil.ReadFile(path)
-		if err != nil || len(content) == 0 {
-			return nil
-		}
-		img.Filename = fmt.Sprintf("%x", md5.Sum(content))
-
-		*images = append(*images, img)
-		return nil
-	})
-}
-
-//用户和图片关联信息入库
-func saveUserImages(c *gin.Context, images data.Images) {
-	var userimages data.UserImages
-	for _, image := range images {
-		uimage := &data.UserImage{}
-		uimage.Metadata = image.Metadata
-		uimage.Attr = image.Attr
-		userimages = append(userimages, uimage)
-	}
-
-	conf := util.Configure("")
-	//入库
-	mongo := db.NewMongo()
-	mongo.Connect(conf.Mongo.Hosts, conf.Mongo.UserImage.Db)
-	mongo.OpenDb(conf.Mongo.UserImage.Db)
-	mongo.OpenTable(conf.Mongo.UserImage.Collection)
-	defer mongo.Close()
-	//log
-	mylog := util.Mylog("")
-	for _, v := range userimages {
-		err := mongo.Insert(v)
+		content, err := ioutil.ReadAll(src)
 		if err != nil {
-			mylog.Errorf("%s", err.Error())
+			continue
 		}
+		v_md5 := fmt.Sprintf("%x", md5.Sum(content))
+		//image
+		image := &data.Image{Filepath: path, Md5: v_md5}
+		images = append(images, image)
+		//imageinfo
+		info := &data.ImageInfo{}
+		info.User = user
+		info.Album = album
+		info.Filename = filename
+		info.Filepath = path
+		info.Updatetime = util.GetMills()
+		info.Md5 = v_md5
+		info.Url = v_md5
+		imageinfos = append(imageinfos, info)
 	}
+	return images, imageinfos, dir, nil
 }
 
 //清理掉缓存文件
@@ -192,67 +116,44 @@ func clearCache(dir string) {
 	os.RemoveAll(dir)
 }
 
-//发送给提取特征和入库服务
-type A struct {
-	dir    string
-	images data.Images
+//图片入库
+func handleImage(images data.Images) error {
+	image := util.GetImage()
+	err := image.Insert(images)
+	return err
 }
 
-func send2GetFeature(dir string, images data.Images) {
-	a := A{dir, images}
-	var feature []float64
+//发送给提取特征和imageinfo入库服务
+type Input struct {
+	dir        string
+	imageinfos data.ImageInfos
+}
 
-	jobqueue := util.JobQueue()
-	job := Job{Input: a, Output: feature, Handler: getImgFeature}
+func handleImageInfos(dir string, imageinfos data.ImageInfos) {
+	input := &Input{dir, imageinfos}
+	jobqueue := util.GetJobQueue()
+	job := Job{Input: input, Handler: saveImageInfos}
 	jobqueue.Push(job)
 }
 
-func getImgFeature(input, output interface{}) {
-	if a, ok := input.(A); ok {
-		dir := a.dir
+func saveImageInfos(input, output interface{}) {
+	if input, ok := input.(*Input); ok {
+		dir := input.dir
 		defer clearCache(dir)
-
-		var features data.Features
-		//host
-		conf := util.Configure("")
-		hostport := fmt.Sprintf("%s:%s", conf.Feature.Host, conf.Feature.Port)
-
-		//提取所有上传文件特征
-		for _, image := range a.images {
-			filename := fmt.Sprintf("%s%s%s", dir, util.DirSeg(), image.Metadata.Name)
-			sli_b, err := ioutil.ReadFile(filename)
+		service := util.GetService_feature()
+		for _, v := range input.imageinfos {
+			content, err := ioutil.ReadFile(v.Filepath)
 			if err != nil {
 				continue
 			}
-			//读到文件大小为0
-			if len(sli_b) == 0 {
-				continue
-			}
-			//提取特征
-			var feature_vector []float64
-			feature_vector, err = GetImgFeature(sli_b, hostport)
-
-			feature := &data.Featuredata{}
-			feature.Metadata = image.Metadata
-			feature.Attr = image.Attr
-			feature.Features = feature_vector
-
-			features = append(features, feature)
+			features := service.Extract(content)
+			v.Features = features
 		}
-		//入库
-		mongo := db.NewMongo()
-		mongo.Connect(conf.Mongo.Hosts, conf.Mongo.Feature.Db)
-		mongo.OpenDb(conf.Mongo.Feature.Db)
-		mongo.OpenTable(conf.Mongo.Feature.Collection)
-		defer mongo.Close()
-
-		//log
-		mylog := util.Mylog("")
-		for _, v := range features {
-			err := mongo.Insert(*v)
-			if err != nil {
-				mylog.Errorf("%s", err.Error())
-			}
+		save := util.GetImageInfo()
+		err := save.Insert(input.imageinfos)
+		if err != nil {
+			mylog := util.GetMylog()
+			mylog.Infof("saveImageInfos fail,%v", err)
 		}
 	}
 }

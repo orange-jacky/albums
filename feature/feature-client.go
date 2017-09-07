@@ -8,7 +8,7 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-func GetImgFeature(image []byte, hostport string) (features []float64, err error) {
+func GetImgFeature(hostport string, image []byte) (features []float64, err error) {
 	//trans
 	var trans thrift.TTransport
 	trans, err = thrift.NewTSocket(hostport)

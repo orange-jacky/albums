@@ -2,29 +2,44 @@ package util
 
 import (
 	"fmt"
-	"runtime"
+	"github.com/gin-gonic/gin"
+	"github.com/orange-jacky/albums/data"
+	"path/filepath"
 )
 
-//目录分隔符
-func DirSeg() string {
-	var s string
-	switch runtime.GOOS {
-	case "darwin", "linux":
-		s = "/"
-	case "window":
-		s = "\\"
-	default:
-		s = "/"
+func GetUserName(c *gin.Context) string {
+	user := c.PostForm("username")
+	if user == "" {
+		user = "default"
 	}
-	return s
+	return user
+}
+
+func GetPassword(c *gin.Context) string {
+	return c.PostForm("password")
+}
+
+func GetAlbumName(c *gin.Context) string {
+	album := c.PostForm("album")
+	if album == "" {
+		album = "default"
+	}
+	return album
+}
+
+func HandleUrl(imageinfos data.ImageInfos) {
+	url := GetUrl()
+	for _, info := range imageinfos {
+		info.Url = fmt.Sprintf("%s/%v", url, info.Url)
+	}
 }
 
 func GetDir(user, album, time string) string {
-	return fmt.Sprintf("filecache%s%s%s%s-%s", DirSeg(), user, DirSeg(), album, time)
+	return filepath.Join("filecache", user, fmt.Sprintf("%v-%v", album, time))
 }
 
 //生成访问图片路由
 func GetUrl() string {
-	conf := Configure("")
+	conf := GetConfigure()
 	return fmt.Sprintf("%s:%s/%s", conf.Nginx.HostInter, conf.Nginx.Port, conf.Nginx.Router)
 }

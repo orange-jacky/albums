@@ -17,10 +17,10 @@ var (
 )
 
 // Mylog  创建mylog单实例
-func Mylog(file string) *mylog {
+func Mylog() *mylog {
 	mylog_once.Do(func() {
 		my_log = &mylog{}
-		if err := my_log.LoadConfigure(file); err != nil {
+		if err := my_log.LoadConfigure(); err != nil {
 			log.Fatalln(err)
 		}
 	})
@@ -28,7 +28,9 @@ func Mylog(file string) *mylog {
 }
 
 // LoadConfigure 从file里读取seelog 配置
-func (l *mylog) LoadConfigure(file string) error {
+func (l *mylog) LoadConfigure() error {
+	conf := GetConfigure()
+	file := conf.Log.File
 	logger, err := seelog.LoggerFromConfigAsFile(file)
 	if err != nil {
 		return err
@@ -75,6 +77,10 @@ func (l *mylog) Error(v ...interface{}) {
 }
 
 // Infof 输出info信息
-func (l *mylog) Flush() {
+func (l *mylog) Stop() {
 	l.Log.Flush()
+}
+
+func GetMylog() *mylog {
+	return my_log
 }
