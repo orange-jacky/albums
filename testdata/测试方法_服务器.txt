@@ -13,13 +13,13 @@
 	上传,下载,搜索接口都加了用户jwt认证,使用接口前必须要先注册用户,再登陆用户,使用token
 
 	测试上传
-	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "images=@./100000.png" 59.110.160.110:9990/auth/upload
+	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "images=@./100000.png" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/upload
 
 	测试下载
-	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" 59.110.160.110:9990/auth/download
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/download
 
 	测试搜索
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "image=@./100000.png" 59.110.160.110:9990/auth/search
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "image=@./100000.png"  -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/search
 
 	相册管理
 		新建相册
