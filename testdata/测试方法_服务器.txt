@@ -8,25 +8,27 @@
 
 	test接口
 	其中Bearer 后面的token换成login登陆的token
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" 59.110.160.110:9990/auth/test
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" 59.110.160.110:9990/auth/test
 
 	上传,下载,搜索接口都加了用户jwt认证,使用接口前必须要先注册用户,再登陆用户,使用token
 
 	测试上传
-	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "images=@./100000.png" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/upload
+	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" -F "images=@./100000.png" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/upload
 
 	测试下载
-	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/download
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/download
 
 	测试搜索
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY" -F "image=@./100000.png"  -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/search
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" -F "image=@./100000.png"  -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/search
 
 	相册管理
 		新建相册
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY"  -d "username=admin&album=test" 59.110.160.110:9990/auth/managealbum/insert
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY"  -d "username=admin&album=test" 59.110.160.110:9990/auth/managealbum/insert
 
 		删除相册
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY"  -d "username=admin&album=test" 59.110.160.110:9990/auth/managealbum/delete
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY"  -d "username=admin&album=test" 59.110.160.110:9990/auth/managealbum/delete
 
 		获取用户有哪些相册
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3Nzg1MzgsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDc3NDkzOH0.2Hq9Rr3wNmsX1g9Js0OpADokY15_O5jE8lv_MrWYVHY"  -d "username=admin" 59.110.160.110:9990/auth/managealbum/get
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY"  -d "username=admin" 59.110.160.110:9990/auth/managealbum/get
+
+

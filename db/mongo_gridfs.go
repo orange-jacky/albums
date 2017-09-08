@@ -3,6 +3,7 @@ package db
 import (
 	. "github.com/orange-jacky/albums/data"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"os"
 )
@@ -22,9 +23,14 @@ func (m *MongoGridfs) C() {
 
 func (m *MongoGridfs) Insert(images Images) error {
 	for _, image := range images {
-		//图片的md5相同,用新的覆盖旧的
-		m.GridFS.RemoveId(image.Md5)
-
+		//检查是否已经存在
+		result := make(map[string]interface{})
+		q := bson.M{"filename": image.Md5}
+		if err := m.GridFS.Find(q).One(&result); err == nil { //找到md5相同的文件
+			if id, ok := result["_id"]; ok {
+				m.GridFS.RemoveId(id) //删除旧文件
+			}
+		}
 		filename := image.Filepath
 		file, err := os.Open(filename)
 		if err != nil {
@@ -42,7 +48,6 @@ func (m *MongoGridfs) Insert(images Images) error {
 		}
 		defer gridfile.Close()
 		gridfile.SetName(image.Md5)
-		gridfile.SetId(image.Md5)
 		if _, err := gridfile.Write(content); err != nil {
 			return err
 		}

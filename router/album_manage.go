@@ -13,6 +13,8 @@ func AlbumManage(c *gin.Context) {
 	album := util.GetAlbumName(c)
 	mongo_album := util.GetAlbum()
 
+	begin := util.GetMills()
+
 	//
 	resp := &data.Response{}
 	action := c.Param("action")
@@ -36,9 +38,11 @@ func AlbumManage(c *gin.Context) {
 		rets, err := mongo_album.GetAlbums(user)
 		if err == nil {
 			resp.Data = rets
+			resp.Total = len(rets)
 		} else {
 			resp.Data = fmt.Sprintf("%v get album fail, %v", user, err)
 		}
 	}
+	resp.Cost = util.GetMills() - begin
 	c.JSON(http.StatusOK, resp)
 }

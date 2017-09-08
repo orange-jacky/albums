@@ -10,6 +10,8 @@ import (
 
 // DownLoad 下载相册或者从相册里下载一张或者多张照片
 func DownLoad(c *gin.Context) {
+	begin := util.GetMills()
+
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
 
@@ -24,7 +26,11 @@ func DownLoad(c *gin.Context) {
 	} else {
 		util.HandleUrl(results)
 		resp.Data = results
+		resp.Total = len(results)
 	}
+
+	resp.Cost = util.GetMills() - begin
+
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "download")
 }

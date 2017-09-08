@@ -12,6 +12,8 @@ import (
 
 // Search 以图搜图
 func Search(c *gin.Context) {
+	begin := util.GetMills()
+
 	resp := data.Response{}
 	//获取图片内容
 	image_content, err := getsSearchFile(c)
@@ -36,6 +38,9 @@ func Search(c *gin.Context) {
 	//
 	util.HandleUrl(ret)
 	resp.Data = ret
+	resp.Total = len(ret)
+	resp.Cost = util.GetMills() - begin
+
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "search")
 }

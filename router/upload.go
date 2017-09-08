@@ -16,6 +16,8 @@ import (
 
 // UpLoad 上传图片到相册
 func UpLoad(c *gin.Context) {
+	begin := util.GetMills()
+
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
 	//先缓存文件
@@ -44,6 +46,9 @@ func UpLoad(c *gin.Context) {
 
 	resp := data.Response{}
 	resp.Data = imageinfos
+	resp.Total = len(imageinfos)
+	resp.Cost = util.GetMills() - begin
+
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "upload")
 }
@@ -89,8 +94,11 @@ func cacheFile(user, album string, c *gin.Context) (images data.Images, imageinf
 		io.Copy(dst, src)
 
 		//计算文件md5值
-		content, err := ioutil.ReadAll(src)
-		if err != nil {
+		content, err := ioutil.ReadFile(path)
+
+		if err != nil || len(content) == 0 {
+			mylog := util.GetMylog()
+			mylog.Errorf("file:%v path:%v content:%v, err:%v", filename, path, len(content), err)
 			continue
 		}
 		v_md5 := fmt.Sprintf("%x", md5.Sum(content))

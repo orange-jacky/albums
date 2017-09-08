@@ -9,6 +9,8 @@ import (
 )
 
 func SignUp(c *gin.Context) {
+	begin := util.GetMills()
+
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
 	passwd := util.GetPassword(c)
@@ -23,6 +25,7 @@ func SignUp(c *gin.Context) {
 		}
 	}
 	resp := data.Response{Status: status, Data: description}
+	resp.Cost = util.GetMills() - begin
 
 	c.JSON(http.StatusOK, resp)
 }
