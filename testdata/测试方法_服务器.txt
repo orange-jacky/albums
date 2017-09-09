@@ -19,7 +19,7 @@
 	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/download
 
 	测试搜索
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NTY2ODMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1MzA4M30.G60YXiFY8c59Uo_v37h-uJ8n3a2hJvIHm8rKB24iITY" -F "image=@./100000.png"  -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/search
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ4NjA0MjMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNDg1NjgyM30.sUwS-q9FUt2TMRgJa4jul2Fu6cae79NhXedXcXeSA7k" -F "image=@./123600.png"  -F "username=admin" -F "album=default" 59.110.160.110:9990/auth/search
 
 	相册管理
 		新建相册

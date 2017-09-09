@@ -18,7 +18,7 @@ var stoper []data.Stoper
 
 func usage(programName string) {
 	fmt.Println(`
-usage: 
+usage:
 	albums [configure file]
 
 eg: albums conf/conf.xml
@@ -33,7 +33,7 @@ func main() {
 	//加载配置文件
 	configure := util.Configure(os.Args[1])
 	Init()
-	defer Release()
+	defer 	Release()
 
 	//设置gin模式
 	gin.SetMode(gin.ReleaseMode)
