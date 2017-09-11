@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"path/filepath"
 )
@@ -25,6 +26,16 @@ func GetAlbumName(c *gin.Context) string {
 		album = "default"
 	}
 	return album
+}
+
+func GetPage(c *gin.Context) int {
+	page := c.DefaultQuery("page", "0")
+	return StrToInt(page)
+}
+
+func GetPageSize(c *gin.Context) int {
+	size := c.DefaultQuery("size", "20")
+	return StrToInt(size)
 }
 
 func HandleUrl(imageinfos data.ImageInfos) {

@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/util"
 	"io/ioutil"
@@ -12,7 +13,7 @@ import (
 
 // Search 以图搜图
 func Search(c *gin.Context) {
-	begin := util.GetMills()
+	begin := GetMills()
 
 	resp := data.Response{}
 	//获取图片内容
@@ -35,11 +36,19 @@ func Search(c *gin.Context) {
 	}
 	//做卡方相似计算
 	ret := histogram(vect, imageinfos)
+
+	//分页
+	page := util.GetPage(c)
+	size := util.GetPageSize(c)
+	start := page * size
+	end := start + size
+
+	ret = ret[start:end]
 	//
 	util.HandleUrl(ret)
 	resp.Data = ret
 	resp.Total = len(ret)
-	resp.Cost = util.GetMills() - begin
+	resp.Cost = GetMills() - begin
 
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "search")
@@ -77,9 +86,12 @@ func getsSearchFile(c *gin.Context) (image []byte, err error) {
 func queryImageInfo(c *gin.Context) (imageInfos data.ImageInfos, err error) {
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
+	sort := []string{"updatetime"}
+	skip := 0
+	limit := 0
 
 	s := util.GetImageInfo()
-	return s.GetImageInfos(user, album)
+	return s.GetImageInfos(user, album, sort, skip, limit)
 }
 
 func histogram(search_vector []float64, imageinfos data.ImageInfos) (ret data.ImageInfos) {
@@ -95,11 +107,7 @@ func histogram(search_vector []float64, imageinfos data.ImageInfos) (ret data.Im
 	}
 	sort.Slice(sli, func(i, j int) bool { return sli[i].distance < sli[j].distance })
 
-	//只返回5张相似度最高的
-	for i, a := range sli {
-		if i == 20 {
-			break
-		}
+	for _, a := range sli {
 		ret = append(ret, a.imageinfo)
 		//fmt.Println(a.distance, a.imageinfo)
 	}

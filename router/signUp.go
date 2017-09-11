@@ -3,13 +3,14 @@ package router
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/util"
 	"net/http"
 )
 
 func SignUp(c *gin.Context) {
-	begin := util.GetMills()
+	begin := GetMills()
 
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
@@ -25,7 +26,7 @@ func SignUp(c *gin.Context) {
 		}
 	}
 	resp := data.Response{Status: status, Data: description}
-	resp.Cost = util.GetMills() - begin
+	resp.Cost = GetMills() - begin
 
 	c.JSON(http.StatusOK, resp)
 }

@@ -62,7 +62,7 @@ func (m *mongoImageInfo) Insert(imageInfos ImageInfos) error {
 	return nil
 }
 
-func (m *mongoImageInfo) GetImageInfos(user, album string) (rets ImageInfos, err error) {
+func (m *mongoImageInfo) GetImageInfos(user, album string, sort []string, skip, limit int) (rets ImageInfos, err error) {
 	if user == "" {
 		return rets, fmt.Errorf("input user empty")
 	}
@@ -79,9 +79,21 @@ func (m *mongoImageInfo) GetImageInfos(user, album string) (rets ImageInfos, err
 	} else {
 		q = bson.M{"user": user, "album": album}
 	}
-	if err := m.Mongo.Query(q, &rets); err != nil {
+	query := m.Mongo.GetCollection().Find(q)
+	if sort != nil && len(sort) > 0 {
+		query = query.Sort(sort...)
+	}
+	query = query.Skip(skip)
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	iter := query.Iter()
+	if err := iter.All(&rets); err != nil {
 		return rets, fmt.Errorf("query %v", err)
 	}
+	//if err := m.Mongo.Query(q, &rets); err != nil {
+	//	return rets, fmt.Errorf("query %v", err)
+	//}
 	return rets, nil
 }
 

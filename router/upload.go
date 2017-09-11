@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	. "github.com/orange-jacky/albums/common/jobqueue"
+	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/util"
 	"io"
@@ -16,7 +17,7 @@ import (
 
 // UpLoad 上传图片到相册
 func UpLoad(c *gin.Context) {
-	begin := util.GetMills()
+	begin := GetMills()
 
 	user := util.GetUserName(c)
 	album := util.GetAlbumName(c)
@@ -47,7 +48,7 @@ func UpLoad(c *gin.Context) {
 	resp := data.Response{}
 	resp.Data = imageinfos
 	resp.Total = len(imageinfos)
-	resp.Cost = util.GetMills() - begin
+	resp.Cost = GetMills() - begin
 
 	c.JSON(http.StatusOK, resp)
 	//c.String(http.StatusOK, "%s", "upload")
@@ -57,7 +58,7 @@ func UpLoad(c *gin.Context) {
 func cacheFile(user, album string, c *gin.Context) (images data.Images, imageinfos data.ImageInfos,
 	dir string, err error) {
 	//根据上传时间,生成上传的唯一目录
-	dir = util.GetDir(user, album, fmt.Sprintf("%d", util.GetNano()))
+	dir = util.GetDir(user, album, fmt.Sprintf("%d", GetNano()))
 
 	r := c.Request
 	//POST takes the uploaded file(s) and saves it to disk.
@@ -111,7 +112,7 @@ func cacheFile(user, album string, c *gin.Context) (images data.Images, imageinf
 		info.Album = album
 		info.Filename = filename
 		info.Filepath = path
-		info.Updatetime = util.GetMills()
+		info.Updatetime = GetMills()
 		info.Md5 = v_md5
 		info.Url = v_md5
 		imageinfos = append(imageinfos, info)

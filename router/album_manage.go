@@ -3,6 +3,7 @@ package router
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/util"
 	"net/http"
@@ -13,7 +14,7 @@ func AlbumManage(c *gin.Context) {
 	album := util.GetAlbumName(c)
 	mongo_album := util.GetAlbum()
 
-	begin := util.GetMills()
+	begin := GetMills()
 
 	//
 	resp := &data.Response{}
@@ -21,28 +22,38 @@ func AlbumManage(c *gin.Context) {
 
 	switch action {
 	case "insert":
+		var str string
 		err := mongo_album.Insert(user, album)
 		if err == nil {
-			resp.Data = fmt.Sprintf("%v create %v success", user, album)
+			str = fmt.Sprintf("%v create %v success", user, album)
 		} else {
-			resp.Data = fmt.Sprintf("%v create %v fail, %v", user, album, err)
+			resp.Status = -1
+			str = fmt.Sprintf("%v create %v fail, %v", user, album, err)
 		}
+		resp.StatusDescription = str
 	case "delete":
+		var str string
 		err := mongo_album.Delete(user, album)
 		if err == nil {
-			resp.Data = fmt.Sprintf("%v delete %v success", user, album)
+			str = fmt.Sprintf("%v delete %v success", user, album)
 		} else {
-			resp.Data = fmt.Sprintf("%v delete %v fail, %v", user, album, err)
+			str = fmt.Sprintf("%v delete %v fail, %v", user, album, err)
+			resp.Status = -2
 		}
+		resp.StatusDescription = str
 	case "get":
 		rets, err := mongo_album.GetAlbums(user)
 		if err == nil {
 			resp.Data = rets
 			resp.Total = len(rets)
+			str := fmt.Sprintf("%v get albums success", user)
+			resp.StatusDescription = str
 		} else {
-			resp.Data = fmt.Sprintf("%v get album fail, %v", user, err)
+			str := fmt.Sprintf("%v get album fail, %v", user, err)
+			resp.StatusDescription = str
+			resp.Status = -3
 		}
 	}
-	resp.Cost = util.GetMills() - begin
+	resp.Cost = GetMills() - begin
 	c.JSON(http.StatusOK, resp)
 }

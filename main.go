@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/orange-jacky/albums/data"
-	"github.com/orange-jacky/albums/router"
-	"github.com/orange-jacky/albums/util"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/orange-jacky/albums/data"
+	"github.com/orange-jacky/albums/router"
+	"github.com/orange-jacky/albums/util"
 )
 
 var stoper []data.Stoper
@@ -33,7 +34,7 @@ func main() {
 	//加载配置文件
 	configure := util.Configure(os.Args[1])
 	Init()
-	defer 	Release()
+	defer Release()
 
 	//设置gin模式
 	gin.SetMode(gin.ReleaseMode)
