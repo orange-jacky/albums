@@ -55,5 +55,8 @@ func AlbumManage(c *gin.Context) {
 		}
 	}
 	resp.Cost = GetMills() - begin
+	if resp.Data == nil {
+		resp.Data = make([]string, 0)
+	}
 	c.JSON(http.StatusOK, resp)
 }
