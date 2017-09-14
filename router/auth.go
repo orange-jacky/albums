@@ -26,13 +26,10 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 			return username, true
 		},
 		Authorizator: func(username string, c *gin.Context) bool {
-			mylog := util.GetMylog()
 			user := util.GetUser()
 			if err := user.CheckUser(username); err != nil {
-				mylog.Infof("Authorizator [%v] fail,[%v]", username, err)
 				return false
 			}
-			mylog.Infof("Authorizator [%v] success", username)
 			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {

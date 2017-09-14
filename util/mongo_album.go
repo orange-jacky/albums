@@ -57,10 +57,15 @@ func (m *mongoAlbum) Insert(user, album string) error {
 	} else {
 		selector := q
 		update := &Album{User: user}
+		var exist bool //相册是否存在
 		for _, v := range result.Albums {
-			if v != album {
-				update.Albums = append(update.Albums, v)
+			if v == album {
+				exist = true
 			}
+			update.Albums = append(update.Albums, v)
+		}
+		if !exist {
+			update.Albums = append(update.Albums, album)
 		}
 		if err := collection.Update(selector, update); err != nil {
 			return fmt.Errorf("%v insert %v fail,%v", user, album, err)
