@@ -41,74 +41,76 @@ func (m *mongoAlbum) Init() error {
 }
 
 func (m *mongoAlbum) Insert(user, album string) error {
-	if user == "" || album == "" {
-		return fmt.Errorf("input user or album empty")
-	}
 	if err := m.Mongo.Connect(); err != nil {
-		return fmt.Errorf("connect %v", err)
+		return fmt.Errorf("connect db fail,%v", err)
 	}
 	defer m.Mongo.Close()
 	m.Mongo.DB()
 	m.Mongo.C()
+	collection := m.Mongo.GetCollection()
 
 	result := &Album{}
 	q := bson.M{"user": user}
-	c := m.Mongo.GetCollection()
-	err := c.Find(q).One(result)
-	if err != nil { //用户第一次创建相册
-		a := &Album{}
-		a.User = user
-		a.Albums = append(a.Albums, album)
-		if err := m.Mongo.Insert(a); err != nil {
-			return fmt.Errorf("insert %v %v fail,%v", user, album, err)
-		}
-	} else { //用户已经创建过相册
-		var find bool
-		for _, v := range result.Albums {
-			if v == album {
-				find = true
-				break
-			}
-		}
-		if !find {
-			selector := bson.M{"user": user}
-			update := &Album{User: user}
-			update.Albums = append(update.Albums, album)
-			update.Albums = append(update.Albums, result.Albums...)
-			if err := m.Mongo.Update(selector, update); err != nil {
-				return fmt.Errorf("%v append %v %v", user, album, err)
-			}
-		}
-	}
-	return nil
-}
-
-func (m *mongoAlbum) Delete(user, album string) error {
-	if user == "" || album == "" {
-		return fmt.Errorf("input user or album empty")
-	}
-	if err := m.Mongo.Connect(); err != nil {
-		return fmt.Errorf("connect %v", err)
-	}
-	defer m.Mongo.Close()
-	m.Mongo.DB()
-	m.Mongo.C()
-
-	result := &Album{}
-	q := bson.M{"user": user}
-	c := m.Mongo.GetCollection()
-	err := c.Find(q).One(result)
-	if err != nil { //没找到用户
-		return fmt.Errorf("user %v not exist", user)
+	err := collection.Find(q).One(result)
+	if err != nil {
+		return fmt.Errorf("find %v from album fail, %v", user, err)
 	} else {
-		selector := bson.M{"user": user}
+		selector := q
 		update := &Album{User: user}
 		for _, v := range result.Albums {
 			if v != album {
 				update.Albums = append(update.Albums, v)
 			}
 		}
-		if err := m.Mongo.Update(selector, update); err != nil {
+		if err := collection.Update(selector, update); err != nil {
+			return fmt.Errorf("%v insert %v fail,%v", user, album, err)
+		}
+	}
+	return nil
+}
+
+func (m *mongoAlbum) InsertDefault(user, album string) error {
+	if err := m.Mongo.Connect(); err != nil {
+		return fmt.Errorf("connect db fail,%v", err)
+	}
+	defer m.Mongo.Close()
+	m.Mongo.DB()
+	m.Mongo.C()
+
+	collection := m.Mongo.GetCollection()
+	a := &Album{}
+	a.User = user
+	a.Albums = append(a.Albums, album)
+	if err := collection.Insert(a); err != nil {
+		return fmt.Errorf("%v insert default %v fail,%v", user, album, err)
+	}
+	return nil
+}
+
+func (m *mongoAlbum) Delete(user, album string) error {
+	if err := m.Mongo.Connect(); err != nil {
+		return fmt.Errorf("connect db fail,%v", err)
+	}
+	defer m.Mongo.Close()
+	m.Mongo.DB()
+	m.Mongo.C()
+
+	collection := m.Mongo.GetCollection()
+
+	result := &Album{}
+	q := bson.M{"user": user}
+	err := collection.Find(q).One(result)
+	if err != nil { //没找到用户
+		return fmt.Errorf("find %v from album fail, %v", user, err)
+	} else {
+		selector := q
+		update := &Album{User: user}
+		for _, v := range result.Albums {
+			if v != album {
+				update.Albums = append(update.Albums, v)
+			}
+		}
+		if err := collection.Update(selector, update); err != nil {
 			return fmt.Errorf("%v delete %v %v", user, album, err)
 		}
 	}
@@ -116,9 +118,6 @@ func (m *mongoAlbum) Delete(user, album string) error {
 }
 
 func (m *mongoAlbum) GetAlbums(user string) (rets []string, err error) {
-	if user == "" {
-		return rets, fmt.Errorf("input user empty")
-	}
 	if err := m.Mongo.Connect(); err != nil {
 		return rets, fmt.Errorf("connect %v", err)
 	}
@@ -126,15 +125,29 @@ func (m *mongoAlbum) GetAlbums(user string) (rets []string, err error) {
 	m.Mongo.DB()
 	m.Mongo.C()
 
+	collection := m.Mongo.GetCollection()
+
 	result := &Album{}
 	q := bson.M{"user": user}
-	c := m.Mongo.GetCollection()
-	err = c.Find(q).One(result)
+	err = collection.Find(q).One(result)
 	if err != nil {
-		return rets, fmt.Errorf("query %v", err)
+		return rets, fmt.Errorf("query %v %v", user, err)
 	}
 	rets = append(rets, result.Albums...)
 	return rets, nil
+}
+
+func (m *mongoAlbum) HasAblum(user, album string) error {
+	albums, err := m.GetAlbums(user)
+	if err != nil {
+		return err
+	}
+	for _, v := range albums {
+		if v == album {
+			return nil
+		}
+	}
+	return fmt.Errorf("%v have not %v", user, album)
 }
 
 func (m *mongoAlbum) Stop() {

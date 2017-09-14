@@ -40,57 +40,71 @@ func (m *mongoUser) Init() error {
 	return nil
 }
 
-func (m *mongoUser) CheckUser(user, passwd string) (int, string) {
-	if user == "" || passwd == "" {
-		return -1, fmt.Sprintf("user or passwd empty")
-	}
-
+func (m *mongoUser) NewUser(user, passwd string) error {
 	if err := m.Mongo.Connect(); err != nil {
-		return -2, fmt.Sprintf("connect %v", err)
+		return fmt.Errorf("connect db fail,%v", err)
 	}
 	defer m.Mongo.Close()
 	m.Mongo.DB()
 	m.Mongo.C()
 
-	result := &User{}
-	q := bson.M{"user": user}
-	c := m.Mongo.GetCollection()
-	err := c.Find(q).One(result)
-	if err != nil { //用户不存在
-		u := User{User: user, Password: passwd}
-		if err := m.Mongo.Insert(u); err != nil {
-			return -3, fmt.Sprintf("create new user %v %v", user, err)
-		} else {
-			return NEW_USER, fmt.Sprintf("create new user %v success", user)
-		}
-	} else { //用户存在
-		if result.Password == passwd {
-			return 2, fmt.Sprintf("%v exist, and passwd is correct", user)
-		} else {
-			return -4, fmt.Sprintf("%v exist, but passwd is incorrect", user)
-		}
+	collection := m.Mongo.GetCollection()
+
+	new_user := User{User: user, Password: passwd}
+	if err := collection.Insert(new_user); err != nil {
+		return fmt.Errorf("create new user %v %v", user, err)
 	}
+	return nil
 }
 
-func (m *mongoUser) FindUser(user string) bool {
-	if user == "" {
-		return false
-	}
+func (m *mongoUser) CheckPasswd(user, passwd string) error {
 	if err := m.Mongo.Connect(); err != nil {
-		return false
+		return fmt.Errorf("connect db fail,%v", err)
 	}
 	defer m.Mongo.Close()
 	m.Mongo.DB()
 	m.Mongo.C()
 
-	q := bson.M{"user": user}
+	collection := m.Mongo.GetCollection()
 
-	c := m.Mongo.GetCollection()
-	count, _ := c.Find(q).Count()
-	if count > 0 {
-		return true
+	q := bson.M{"user": user, "password": passwd}
+	count, err := collection.Find(q).Count()
+
+	if err != nil {
+		return fmt.Errorf("find %v fail,%v", user)
 	}
-	return false
+	if count == 0 {
+		err = PASSWD_INCORRECT
+	} else if count == 1 {
+		err = nil
+	} else if count > 1 {
+		err = fmt.Errorf("find %v %v", count, user)
+	}
+	return err
+}
+
+func (m *mongoUser) CheckUser(user string) error {
+	if err := m.Mongo.Connect(); err != nil {
+		return fmt.Errorf("connect db fail,%v", err)
+	}
+	defer m.Mongo.Close()
+	m.Mongo.DB()
+	m.Mongo.C()
+	collection := m.Mongo.GetCollection()
+
+	q := bson.M{"user": user}
+	count, err := collection.Find(q).Count()
+	if err != nil {
+		return fmt.Errorf("find %v fail,%v", user)
+	}
+	if count == 0 {
+		err = USER_NOT_EXIST
+	} else if count == 1 {
+		err = nil
+	} else if count > 1 {
+		err = fmt.Errorf("find %v %v", count, user)
+	}
+	return err
 }
 
 func (m *mongoUser) Stop() {

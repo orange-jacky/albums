@@ -6,5 +6,5 @@ type Response struct {
 	Cost              int64       `json:"cost"`
 	Total             int         `json:"total"`
 	Data              interface{} `json:"data"` //保存返回数据
-	StatusDescription interface{} `json:"statusDescription"`
+	StatusDescription interface{} `json:"statusdescription"`
 }

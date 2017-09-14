@@ -23,12 +23,17 @@ func AlbumManage(c *gin.Context) {
 	switch action {
 	case "insert":
 		var str string
-		err := mongo_album.Insert(user, album)
+		err := mongo_album.HasAblum(user, album)
 		if err == nil {
-			str = fmt.Sprintf("%v create %v success", user, album)
+			str = fmt.Sprintf("user had %v", user, album)
 		} else {
-			resp.Status = -1
-			str = fmt.Sprintf("%v create %v fail, %v", user, album, err)
+			err := mongo_album.Insert(user, album)
+			if err == nil {
+				str = fmt.Sprintf("%v create %v success", user, album)
+			} else {
+				resp.Status = -1
+				str = fmt.Sprintf("%v create %v fail, %v", user, album, err)
+			}
 		}
 		resp.StatusDescription = str
 	case "delete":
@@ -36,6 +41,14 @@ func AlbumManage(c *gin.Context) {
 		err := mongo_album.Delete(user, album)
 		if err == nil {
 			str = fmt.Sprintf("%v delete %v success", user, album)
+			//删除完相册后,需要把相册里image信息删掉
+			imageinfo := util.GetImageInfo()
+			err := imageinfo.DeleteByUserAlbum(user, album)
+			if err != nil {
+				str = fmt.Sprintf("%v, delete imageinfo fail,%v", str, err)
+			} else {
+				str = fmt.Sprintf("%v, delete imageinfo success", str)
+			}
 		} else {
 			str = fmt.Sprintf("%v delete %v fail, %v", user, album, err)
 			resp.Status = -2

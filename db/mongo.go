@@ -56,23 +56,3 @@ func (m *MongoClient) Close() {
 func (m *MongoClient) GetCollection() *mgo.Collection {
 	return m.Session.C
 }
-
-//result 必须是指针
-func (m *MongoClient) Query(query, result interface{}) error {
-	iter := m.Session.C.Find(query).Iter()
-	return iter.All(result)
-}
-
-//result 必须是指针
-func (m *MongoClient) QuerySelect(query, selector, result interface{}) error {
-	iter := m.Session.C.Find(query).Select(selector).Iter()
-	return iter.All(result)
-}
-
-func (m *MongoClient) Insert(docs ...interface{}) error {
-	return m.Session.C.Insert(docs...)
-}
-
-func (m *MongoClient) Update(selector interface{}, update interface{}) error {
-	return m.Session.C.Update(selector, update)
-}

@@ -19,7 +19,8 @@ func Search(c *gin.Context) {
 	//获取图片内容
 	image_content, err := getsSearchFile(c)
 	if err != nil {
-		resp.Data = err
+		resp.Status = -1
+		resp.StatusDescription = err
 		c.JSON(http.StatusOK, resp)
 		return
 	}
@@ -30,7 +31,8 @@ func Search(c *gin.Context) {
 	//查特征库,找到对比数据
 	imageinfos, err := queryImageInfo(c)
 	if err != nil {
-		resp.Data = err
+		resp.Status = -1
+		resp.StatusDescription = err
 		c.JSON(http.StatusOK, resp)
 		return
 	}

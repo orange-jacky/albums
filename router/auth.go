@@ -16,15 +16,24 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh: time.Hour,
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 			user := util.GetUser()
-			status, _ := user.CheckUser(username, password)
-			if status > 0 {
-				return username, true
+			err := user.CheckUser(username)
+			if err != nil {
+				return username, false
 			}
-			return username, false
+			if err != nil {
+				return username, false
+			}
+			return username, true
 		},
 		Authorizator: func(username string, c *gin.Context) bool {
+			mylog := util.GetMylog()
 			user := util.GetUser()
-			return user.FindUser(username)
+			if err := user.CheckUser(username); err != nil {
+				mylog.Infof("Authorizator [%v] fail,[%v]", username, err)
+				return false
+			}
+			mylog.Infof("Authorizator [%v] success", username)
+			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			resp := data.Response{Status: code, Data: message}
@@ -43,7 +52,6 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 
 		// TokenHeadName is a string in the header. Default value is "Bearer"
 		TokenHeadName: "Bearer",
-
 		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 		TimeFunc: time.Now,
 	}

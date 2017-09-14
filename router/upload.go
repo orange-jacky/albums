@@ -27,7 +27,7 @@ func UpLoad(c *gin.Context) {
 		clearCache(dir)
 		mylog := util.GetMylog()
 		mylog.Errorf("upload cache images fail, %v", err)
-		resp := data.Response{Status: -1, Data: fmt.Sprintf("upload cache images fail, %v", err)}
+		resp := data.Response{Status: -1, StatusDescription: fmt.Sprintf("upload cache images fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
 		return
 	}
@@ -37,7 +37,7 @@ func UpLoad(c *gin.Context) {
 		clearCache(dir)
 		mylog := util.GetMylog()
 		mylog.Errorf("upload image insert mongo fail, %v", err)
-		resp := data.Response{Status: -2, Data: fmt.Sprintf("upload image insert mongo fail, %v", err)}
+		resp := data.Response{Status: -2, StatusDescription: fmt.Sprintf("upload image insert mongo fail, %v", err)}
 		c.JSON(http.StatusOK, resp)
 		return
 	}

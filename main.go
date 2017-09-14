@@ -51,6 +51,7 @@ func main() {
 		auth.POST("/download", router.DownLoad)
 		auth.POST("/search", router.Search)
 		auth.POST("/managealbum/:action", router.AlbumManage)
+		auth.POST("/delete", router.Delete)
 	}
 
 	server := fmt.Sprintf("%s:%s", configure.Gin.Host, configure.Gin.Port)

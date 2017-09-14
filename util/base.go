@@ -6,6 +6,7 @@ import (
 	. "github.com/orange-jacky/albums/common/util"
 	"github.com/orange-jacky/albums/data"
 	"path/filepath"
+	"strings"
 )
 
 func GetUserName(c *gin.Context) string {
@@ -36,6 +37,11 @@ func GetPage(c *gin.Context) int {
 func GetPageSize(c *gin.Context) int {
 	size := c.DefaultQuery("size", "20")
 	return StrToInt(size)
+}
+
+func GetDeleteMD5(c *gin.Context) []string {
+	md5 := c.PostForm("md5")
+	return strings.Split(md5, ",")
 }
 
 func HandleUrl(imageinfos data.ImageInfos) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "github.com/orange-jacky/albums/data"
 	. "github.com/orange-jacky/albums/db"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"sync"
@@ -48,24 +49,57 @@ func (m *mongoImageInfo) Insert(imageInfos ImageInfos) error {
 	m.Mongo.DB()
 	m.Mongo.C()
 
+	collection := m.Mongo.GetCollection()
 	for _, info := range imageInfos {
-		result := &ImageInfo{}
 		q := bson.M{"user": info.User, "album": info.Album, "md5": info.Md5}
-		c := m.Mongo.GetCollection()
-		err := c.Find(q).One(result)
+		_, err := collection.Upsert(q, info)
 		if err != nil { //不存在
-			if err := m.Mongo.Insert(info); err != nil {
-				return fmt.Errorf("insert %v  fail,%v", info, err)
-			}
+			return fmt.Errorf("insert %v fail,%v", info, err)
 		}
 	}
 	return nil
 }
 
-func (m *mongoImageInfo) GetImageInfos(user, album string, sort []string, skip, limit int) (rets ImageInfos, err error) {
-	if user == "" {
-		return rets, fmt.Errorf("input user empty")
+func (m *mongoImageInfo) Delete(imageInfos ImageInfos) error {
+	if err := m.Mongo.Connect(); err != nil {
+		return fmt.Errorf("connect %v", err)
 	}
+	defer m.Mongo.Close()
+	m.Mongo.DB()
+	m.Mongo.C()
+
+	collection := m.Mongo.GetCollection()
+
+	for _, info := range imageInfos {
+		q := bson.M{"user": info.User, "album": info.Album, "md5": info.Md5}
+		err := collection.Remove(q)
+		if err != nil && err != mgo.ErrNotFound {
+			return fmt.Errorf("delete %v  fail,%v", q, err)
+		}
+	}
+	return nil
+}
+
+func (m *mongoImageInfo) DeleteByUserAlbum(user, album string) error {
+	if err := m.Mongo.Connect(); err != nil {
+		return fmt.Errorf("connect %v", err)
+	}
+	defer m.Mongo.Close()
+	m.Mongo.DB()
+	m.Mongo.C()
+
+	collection := m.Mongo.GetCollection()
+	q := bson.M{"user": user, "album": album}
+	_, err := collection.RemoveAll(q)
+	if err != nil {
+		return fmt.Errorf("%v delete %v  fail,%v", user, album, err)
+	}
+	return nil
+}
+
+func (m *mongoImageInfo) GetImageInfos(user, album string, sort []string,
+	skip, limit int) (rets ImageInfos, err error) {
+
 	if err := m.Mongo.Connect(); err != nil {
 		return rets, fmt.Errorf("connect %v", err)
 	}
@@ -73,13 +107,15 @@ func (m *mongoImageInfo) GetImageInfos(user, album string, sort []string, skip, 
 	m.Mongo.DB()
 	m.Mongo.C()
 
+	collection := m.Mongo.GetCollection()
+
 	var q bson.M
 	if album == "" {
 		q = bson.M{"user": user}
 	} else {
 		q = bson.M{"user": user, "album": album}
 	}
-	query := m.Mongo.GetCollection().Find(q)
+	query := collection.Find(q)
 	if sort != nil && len(sort) > 0 {
 		query = query.Sort(sort...)
 	}
@@ -89,11 +125,9 @@ func (m *mongoImageInfo) GetImageInfos(user, album string, sort []string, skip, 
 	}
 	iter := query.Iter()
 	if err := iter.All(&rets); err != nil {
-		return rets, fmt.Errorf("query %v", err)
+		return rets, fmt.Errorf("query %v %v sort:%v skip:%v limit:%v fail,%v", user, album,
+			sort, skip, limit, err)
 	}
-	//if err := m.Mongo.Query(q, &rets); err != nil {
-	//	return rets, fmt.Errorf("query %v", err)
-	//}
 	return rets, nil
 }
 
