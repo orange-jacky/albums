@@ -2,11 +2,12 @@ package util
 
 import (
 	"fmt"
-	"github.com/orange-jacky/albums/feature"
+	"github.com/orange-jacky/albums/imagehandle"
 	"log"
 	"sync"
 )
 
+//包装了一下go写的thrit客户端,所有go调用c++服务都从这个go服务发起
 type service_feature struct {
 	Hosts string
 }
@@ -33,8 +34,21 @@ func (m *service_feature) Init() error {
 	return nil
 }
 
+//提取图片hsv特征
 func (m *service_feature) Extract(image []byte) (features []float64) {
-	f, _ := feature.GetImgFeature(m.Hosts, image)
+	f, _ := imagehandle.GetImgFeature(m.Hosts, image)
+	return f
+}
+
+//深度学习
+func (m *service_feature) DeepLearning(image []byte) (r *imagehandle.Result_) {
+	f, _ := imagehandle.DeepLearning(m.Hosts, image)
+	return f
+}
+
+//深度学习做物体检测
+func (m *service_feature) ObjectDetectionDL(image []byte) (r *imagehandle.Result_) {
+	f, _ := imagehandle.ObjectDetectionDL(m.Hosts, image)
 	return f
 }
 

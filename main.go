@@ -52,6 +52,8 @@ func main() {
 		auth.POST("/search", router.Search)
 		auth.POST("/managealbum/:action", router.AlbumManage)
 		auth.POST("/delete", router.Delete)
+		auth.POST("/deeplearning", router.DeepLearning)
+		auth.POST("/objectdetection_dl", router.ObjectDetectionDL)
 	}
 
 	server := fmt.Sprintf("%s:%s", configure.Gin.Host, configure.Gin.Port)
