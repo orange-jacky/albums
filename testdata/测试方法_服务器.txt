@@ -35,8 +35,8 @@
 		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin" 59.110.160.110:9990/auth/managealbum/get
 
 	测试-深度学习
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./123600.png"  "59.110.160.110:9990/auth/deeplearning"
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./jemma.png"  "59.110.160.110:9990/auth/deeplearning"
 
 	测试-物体检测(深度学习做的物体检测)
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./123600.png"  "59.110.160.110:9990/auth/objectdetection_dl"
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./example_01.jpg"  "59.110.160.110:9990/auth/objectdetection_dl"
 

@@ -21,3 +21,5 @@ filecache/
 .DS_Store
 
 sftp-config.json
+
+testdata/example_06.jpg
