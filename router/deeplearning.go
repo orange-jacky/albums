@@ -23,7 +23,7 @@ func DeepLearning(c *gin.Context) {
 	//提取特征
 	s := util.GetService_feature()
 	vect := s.DeepLearning(image_content)
-
+	//其中vect中的ret字节流是经过base64编码的jpg格式图片
 	resp.Data = vect
 	resp.Total = 1
 	resp.Cost = GetMills() - begin
