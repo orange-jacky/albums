@@ -40,11 +40,14 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	//配置路由
 	r := gin.Default()
+	r.Use(util.CORS()) //支持跨域访问,但放弃了安全性
+
 	r.POST("/signup", router.SignUp)
 	authMiddleware := router.GetAuthMiddleware()
 	r.POST("/login", authMiddleware.LoginHandler)
 	auth := r.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
+	auth.Use(util.CORS()) //支持跨域访问,但放弃了安全性
 	{
 		auth.GET("/test", router.SignIn)
 		auth.POST("/upload", router.UpLoad)
