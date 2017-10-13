@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/orange-jacky/albums/data"
 	"github.com/orange-jacky/albums/util"
+	"net/http"
 	"time"
 )
 
@@ -34,7 +35,9 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
 			resp := data.Response{Status: code, Data: message}
-			c.JSON(code, resp)
+			//c.JSON(code, resp)
+			//没授权的http resp状态也为200, 具体错误信息再resp中
+			c.JSON(http.StatusOK, resp)
 		},
 		// TokenLookup is a string in the form of "<source>:<name>" that is used
 		// to extract token from the request.
