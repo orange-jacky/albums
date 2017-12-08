@@ -21,26 +21,33 @@ func SignUp(c *gin.Context) {
 
 	resp := &data.Response{}
 
-	err := u.CheckUser(username)
-	if err == nil {
-		resp.Status = -1
-		resp.StatusDescription = fmt.Sprintf("%v exist, please change a username", username)
+	count, err := u.CheckUser(username)
+	if err != nil {
+		resp.Status = -100
+		resp.StatusDescription = fmt.Sprintf("%v", err)
 	} else {
-		if err == data.USER_NOT_EXIST {
+		if count == 0 {
 			if err = u.NewUser(username, passwd); err == nil {
 				if err = a.InsertDefault(username, album); err == nil {
+					//插入test
+					a.Insert(username, "test")
+					resp.Status = 0
 					resp.StatusDescription = fmt.Sprintf("create a new user %v success", username)
+
 				} else {
-					resp.Status = -1
+					resp.Status = 1
 					resp.StatusDescription = fmt.Sprintf("%v", err)
 				}
 			} else {
 				resp.Status = -1
 				resp.StatusDescription = fmt.Sprintf("%v", err)
 			}
+		} else if count == 1 {
+			resp.Status = 2
+			resp.StatusDescription = fmt.Sprintf("%v exists", username)
 		} else {
-			resp.Status = -1
-			resp.StatusDescription = fmt.Sprintf("%v", err)
+			resp.Status = -2
+			resp.StatusDescription = fmt.Sprintf("lots of %v exists ", username)
 		}
 	}
 	resp.Cost = GetMills() - begin

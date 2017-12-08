@@ -64,8 +64,8 @@ func main() {
 	s := &http.Server{
 		Addr:         server,
 		Handler:      r,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 5 * time.Second,
+		ReadTimeout:  120 * time.Second,
+		WriteTimeout: 120 * time.Second,
 	}
 	go func(s *http.Server) {
 		log.Printf("[Main] http server start\n")

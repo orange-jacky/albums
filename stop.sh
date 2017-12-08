@@ -1,2 +1,2 @@
-pid=`ps -ef | grep albums | grep -v grep | awk '{print $2}'`
+pid=`ps -ef | grep albums_server | grep -v grep | awk '{print $2}'`
 kill -9 $pid

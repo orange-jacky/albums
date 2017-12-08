@@ -17,18 +17,22 @@ func GetAuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh: time.Hour,
 		Authenticator: func(username string, password string, c *gin.Context) (string, bool) {
 			user := util.GetUser()
-			err := user.CheckUser(username)
+			count, err := user.CheckUserAndPasswd(username, password)
 			if err != nil {
 				return username, false
 			}
-			if err != nil {
+			if count <= 0 {
 				return username, false
 			}
 			return username, true
 		},
 		Authorizator: func(username string, c *gin.Context) bool {
 			user := util.GetUser()
-			if err := user.CheckUser(username); err != nil {
+			count, err := user.CheckUser(username)
+			if err != nil {
+				return false
+			}
+			if count <= 0 {
 				return false
 			}
 			return true

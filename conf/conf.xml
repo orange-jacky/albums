@@ -8,18 +8,18 @@
     <gin>
         <!--指定host,只能通过host访问,不指定host,通过部署主机的任意ip地址都可以访问-->        
         <host></host>
-        <port>9990</port>
+        <port>9000</port>
     </gin>
     <!--c++实施提取图片特征信息-->        
     <feature>
         <host>localhost</host>
-        <port>9091</port>
+        <port>9001</port>
     </feature>
     <!--nginx,通过nginx-gridfs获取图片-->        
     <nginx>
         <host>localhost</host>
-        <host_inter>59.110.160.110</host_inter>
-        <port>9999</port>
+        <host_inter>http://www.gorgzn.cn</host_inter>
+        <port>80</port>
         <router>image</router>
     </nginx>
     <!--mongo信息-->        

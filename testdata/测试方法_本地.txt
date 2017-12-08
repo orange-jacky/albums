@@ -13,50 +13,49 @@
 	cd $GOPATH/src/github.com/orange-jacky/albums/testdata
 
 	注册用户
-	curl -d "username=admin&password=admin" 127.0.0.1:9990/signup
+	curl -d "username=admin&password=admin" 127.0.0.1:9000/signup
 
 	登陆用户, 
 	login是jwt内部模块,只认json格式的数据
-	curl -H "'Content-type':'application/json'" -d '{"username":"admin","password":"admin"}' 127.0.0.1:9990/login
+	curl -H "'Content-type':'application/json'" -d '{"username":"admin","password":"admin"}' 127.0.0.1:9000/login
 	会返回token
 
 	test接口
 	其中Bearer 后面的token换成login登陆的token
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" 127.0.0.1:9990/auth/test
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" 127.0.0.1:9000/auth/test
 
 	上传,下载,搜索接口都加了用户jwt认证,使用接口前必须要先注册用户,再登陆用户,使用token
 
 	测试上传
-	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU4MTI2OTMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTgwOTA5M30.MHQfHoTq-6TYfsNX0FGYMj4Nt9PJRMsi_DrEM_oTeec" -F "images=@./100000.png" -F "username=admin" -F "album=test" 127.0.0.1:9990/auth/upload
+	curl  -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU4MTI2OTMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTgwOTA5M30.MHQfHoTq-6TYfsNX0FGYMj4Nt9PJRMsi_DrEM_oTeec" -F "images=@./100000.png" -F "username=admin" -F "album=test" 127.0.0.1:9000/auth/upload
 
 	测试下载
-	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "username=admin" -F "album=default" "127.0.0.1:9990/auth/download?page=1&size=5"
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "username=admin" -F "album=default" "127.0.0.1:9000/auth/download?page=1&size=5"
 
 	测试删除
-	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g" -F "username=admin" -F "album=test" -F "md5=65c4665108661f14c9fc83a9580af609" 127.0.0.1:9990/auth/delete
+	curl -XPOST -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g" -F "username=admin" -F "album=test" -F "md5=65c4665108661f14c9fc83a9580af609" 127.0.0.1:9000/auth/delete
 
 	测试搜索
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./123600.png"  -F "username=admin" -F "album=default" "127.0.0.1:9990/auth/search?page=1&size=5"
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODU3NjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTE4MjE2MH0.0yKtLPWxZM-Py6KDyDByuYtFZxH1jZSCFRV602sEKBQ" -F "image=@./123600.png"  -F "username=admin" -F "album=default" "127.0.0.1:9000/auth/search?page=1&size=5"
 
 	相册管理
 		新建相册
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin&album=test" 127.0.0.1:9990/auth/managealbum/insert
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin&album=test" 127.0.0.1:9000/auth/managealbum/insert
 
 		删除相册(删除相册会自动删除相册里照片)
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin&album=test" 127.0.0.1:9990/auth/managealbum/delete
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin&album=test" 127.0.0.1:9000/auth/managealbum/delete
 
 		获取用户有哪些相册
-		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin" 127.0.0.1:9990/auth/managealbum/get
+		curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNzI2MTksImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNTM2OTAxOX0.RcxsXwlXAXWMPQtbmetrYy7d1tP8nVa5TGn4K6Xub_g"  -d "username=admin" 127.0.0.1:9000/auth/managealbum/get
 
 	测试-深度学习
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDc1MjM5MzYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNzUyMDMzNn0.jacEMWozfHJkg-UW7Dw9yHBkZVzLYPVWFqsGFP7jwMM" -F "image=@./jemma.png"  "127.0.0.1:9990/auth/deeplearning"
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTIzNTg0MTMsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUxMjM1NDgxM30.4IduV3BUUhYUTESbwGWJbSQ62kDQADG9813ZENmLGGY" -F "image=@./jemma.png"  "127.0.0.1:9000/auth/deeplearning"
 
 	测试-物体检测(深度学习做的物体检测)
-	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDc1MjM5MzYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNzUyMDMzNn0.jacEMWozfHJkg-UW7Dw9yHBkZVzLYPVWFqsGFP7jwMM" -F "image=@./example_01.jpg"  "127.0.0.1:9990/auth/objectdetection_dl"
-	
+	curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDc1MjM5MzYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUwNzUyMDMzNn0.jacEMWozfHJkg-UW7Dw9yHBkZVzLYPVWFqsGFP7jwMM" -F "image=@./example_01.jpg"  "127.0.0.1:9000/auth/objectdetection_dl"
 	
 4.压力测试
-ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9990/auth/download"
+ab -n 1000 -s 100 -p 1.txt -T 'application/x-www-form-urlencoded'  "127.0.0.1:9000/auth/download"
 
 其中 n 表示并发数量
 p 保存需要post的参数

@@ -57,9 +57,9 @@ func (m *mongoUser) NewUser(user, passwd string) error {
 	return nil
 }
 
-func (m *mongoUser) CheckPasswd(user, passwd string) error {
+func (m *mongoUser) CheckUserAndPasswd(user, passwd string) (int, error) {
 	if err := m.Mongo.Connect(); err != nil {
-		return fmt.Errorf("connect db fail,%v", err)
+		return -1, fmt.Errorf("connect db fail,%v", err)
 	}
 	defer m.Mongo.Close()
 	m.Mongo.DB()
@@ -71,21 +71,14 @@ func (m *mongoUser) CheckPasswd(user, passwd string) error {
 	count, err := collection.Find(q).Count()
 
 	if err != nil {
-		return fmt.Errorf("find %v fail,%v", user)
+		return -1, fmt.Errorf("find %v fail,%v", user)
 	}
-	if count == 0 {
-		err = PASSWD_INCORRECT
-	} else if count == 1 {
-		err = nil
-	} else if count > 1 {
-		err = fmt.Errorf("find %v %v", count, user)
-	}
-	return err
+	return count, nil
 }
 
-func (m *mongoUser) CheckUser(user string) error {
+func (m *mongoUser) CheckUser(user string) (int, error) {
 	if err := m.Mongo.Connect(); err != nil {
-		return fmt.Errorf("connect db fail,%v", err)
+		return -1, fmt.Errorf("connect db fail,%v", err)
 	}
 	defer m.Mongo.Close()
 	m.Mongo.DB()
@@ -95,16 +88,9 @@ func (m *mongoUser) CheckUser(user string) error {
 	q := bson.M{"user": user}
 	count, err := collection.Find(q).Count()
 	if err != nil {
-		return fmt.Errorf("find %v fail,%v", user)
+		return -1, fmt.Errorf("find %v fail,%v", user)
 	}
-	if count == 0 {
-		err = USER_NOT_EXIST
-	} else if count == 1 {
-		err = nil
-	} else if count > 1 {
-		err = fmt.Errorf("find %v %v", count, user)
-	}
-	return err
+	return count, nil
 }
 
 func (m *mongoUser) Stop() {
